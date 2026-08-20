@@ -69,6 +69,20 @@ public class Monkey {
                 } catch (NumberFormatException e) {
                     System.out.println("Please specify a valid task number.");
                 }
+            } else if (command.startsWith("deadline ") && taskCount < MAX_TASKS) {
+                String deadlineDetails = command.substring("deadline ".length());
+                int byMarker = deadlineDetails.indexOf(" /by ");
+                String description = byMarker >= 0
+                        ? deadlineDetails.substring(0, byMarker).trim()
+                        : deadlineDetails.trim();
+                String by = byMarker >= 0
+                        ? deadlineDetails.substring(byMarker + " /by ".length()).trim()
+                        : "";
+                tasks[taskCount] = new Deadline(description, by);
+                taskCount++;
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + tasks[taskCount - 1]);
+                System.out.println("Now you have " + taskCount + " tasks in the list.");
             } else if (command.startsWith("todo ") && taskCount < MAX_TASKS) {
                 String description = command.substring("todo ".length()).trim();
                 tasks[taskCount] = new ToDos(description);
