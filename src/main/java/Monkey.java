@@ -1,6 +1,10 @@
 import java.util.Scanner;
 
+/** A simple command-line task manager. */
 public class Monkey {
+    private static final int MAX_TASKS = 100;
+
+    /** Runs the task manager and processes commands until the user says bye. */
     public static void main(String[] args) {
         String separator = "____________________________________________________________";
         String banner = " __  __              _\n"
@@ -17,6 +21,9 @@ public class Monkey {
         System.out.println(separator);
 
         Scanner scanner = new Scanner(System.in);
+        String[] tasks = new String[MAX_TASKS];
+        int taskCount = 0;
+
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             System.out.println(separator);
@@ -27,7 +34,18 @@ public class Monkey {
                 break;
             }
 
-            System.out.println(command);
+            if (command.equals("list")) {
+                for (int i = 0; i < taskCount; i++) {
+                    System.out.println((i + 1) + ". " + tasks[i]);
+                }
+            } else if (taskCount < MAX_TASKS) {
+                tasks[taskCount] = command;
+                taskCount++;
+                System.out.println("added: " + command);
+            } else {
+                System.out.println("Sorry, I can only store up to " + MAX_TASKS + " tasks.");
+            }
+
             System.out.println(separator);
         }
     }
