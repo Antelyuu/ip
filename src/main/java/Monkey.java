@@ -21,8 +21,7 @@ public class Monkey {
         System.out.println(separator);
 
         Scanner scanner = new Scanner(System.in);
-        String[] tasks = new String[MAX_TASKS];
-        boolean[] completed = new boolean[MAX_TASKS];
+        Task[] tasks = new Task[MAX_TASKS];
         int taskCount = 0;
 
         while (scanner.hasNextLine()) {
@@ -40,17 +39,18 @@ public class Monkey {
                     System.out.println("Here are the tasks in your list:");
                 }
                 for (int i = 0; i < taskCount; i++) {
-                    String status = completed[i] ? "X" : " ";
-                    System.out.println((i + 1) + ".[" + status + "] " + tasks[i]);
+                    System.out.println((i + 1) + ".[" + tasks[i].getStatusIcon() + "] "
+                            + tasks[i].getDescription());
                 }
             } else if (command.startsWith("mark ")) {
                 String taskNumber = command.substring("mark ".length()).trim();
                 try {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < taskCount) {
-                        completed[index] = true;
+                        tasks[index].markAsDone();
                         System.out.println("Nice! I've marked this task as done:");
-                        System.out.println("  [X] " + tasks[index]);
+                        System.out.println("  [" + tasks[index].getStatusIcon() + "] "
+                                + tasks[index].getDescription());
                     } else {
                         System.out.println("That task number does not exist.");
                     }
@@ -62,9 +62,10 @@ public class Monkey {
                 try {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < taskCount) {
-                        completed[index] = false;
+                        tasks[index].markAsNotDone();
                         System.out.println("OK, I've marked this task as not done yet:");
-                        System.out.println("  [ ] " + tasks[index]);
+                        System.out.println("  [" + tasks[index].getStatusIcon() + "] "
+                                + tasks[index].getDescription());
                     } else {
                         System.out.println("That task number does not exist.");
                     }
@@ -72,7 +73,7 @@ public class Monkey {
                     System.out.println("Please specify a valid task number.");
                 }
             } else if (taskCount < MAX_TASKS) {
-                tasks[taskCount] = command;
+                tasks[taskCount] = new Task(command);
                 taskCount++;
                 System.out.println("added: " + command);
             } else {
