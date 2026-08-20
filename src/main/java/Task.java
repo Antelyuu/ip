@@ -5,6 +5,9 @@ public class Task {
 
     /** Creates a task that is initially not done. */
     public Task(String description) {
+        if (description == null || description.trim().isEmpty()) {
+            throw new IllegalArgumentException("This monkey needs a task description before it can add one.");
+        }
         this.description = description;
         this.isDone = false;
     }

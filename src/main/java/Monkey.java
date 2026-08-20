@@ -28,21 +28,27 @@ public class Monkey {
             String command = scanner.nextLine();
             System.out.println(separator);
 
-            if (command.equals("bye")) {
-                System.out.println("Bye! Keep swinging, and I hope to see you again soon!");
-                System.out.println(separator);
-                break;
-            }
+            try {
+                if (command.trim().isEmpty()) {
+                    throw new MonkeyException("This monkey heard nothing! Please swing over a command.");
+                }
 
-            if (command.equals("list")) {
+                if (command.equals("bye")) {
+                    System.out.println("Bye! Keep swinging, and I hope to see you again soon!");
+                    System.out.println(separator);
+                    break;
+                }
+
+                if (command.equals("list")) {
                 if (taskCount > 0) {
                     System.out.println("Here are the tasks in your list:");
                 }
                 for (int i = 0; i < taskCount; i++) {
                     System.out.println((i + 1) + "." + tasks[i]);
                 }
-            } else if (command.startsWith("mark ")) {
-                String taskNumber = command.substring("mark ".length()).trim();
+                } else if (command.equals("mark") || command.startsWith("mark ")) {
+                String taskNumber = command.length() > "mark".length()
+                        ? command.substring("mark".length()).trim() : "";
                 try {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < taskCount) {
@@ -53,10 +59,11 @@ public class Monkey {
                         System.out.println("That task number does not exist.");
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Please specify a valid task number.");
+                    throw new MonkeyException("That banana-shaped task number does not look right. Use a number after 'mark'.");
                 }
-            } else if (command.startsWith("unmark ")) {
-                String taskNumber = command.substring("unmark ".length()).trim();
+            } else if (command.equals("unmark") || command.startsWith("unmark ")) {
+                String taskNumber = command.length() > "unmark".length()
+                        ? command.substring("unmark".length()).trim() : "";
                 try {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < taskCount) {
@@ -67,10 +74,11 @@ public class Monkey {
                         System.out.println("That task number does not exist.");
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Please specify a valid task number.");
+                    throw new MonkeyException("This monkey needs a valid task number after 'unmark'.");
                 }
-            } else if (command.startsWith("event ") && taskCount < MAX_TASKS) {
-                String eventDetails = command.substring("event ".length());
+            } else if ((command.equals("event") || command.startsWith("event ")) && taskCount < MAX_TASKS) {
+                String eventDetails = command.length() > "event".length()
+                        ? command.substring("event".length()).trim() : "";
                 int fromMarker = eventDetails.indexOf(" /from ");
                 int toMarker = eventDetails.indexOf(" /to ", fromMarker + 1);
                 String description = fromMarker >= 0
@@ -82,13 +90,17 @@ public class Monkey {
                 String to = toMarker >= 0
                         ? eventDetails.substring(toMarker + " /to ".length()).trim()
                         : "";
+                if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                    throw new MonkeyException("An event needs a description, a /from time, and a /to time. Even monkeys need a schedule!");
+                }
                 tasks[taskCount] = new Event(description, from, to);
                 taskCount++;
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  " + tasks[taskCount - 1]);
                 System.out.println("Now you have " + taskCount + " tasks in the list.");
-            } else if (command.startsWith("deadline ") && taskCount < MAX_TASKS) {
-                String deadlineDetails = command.substring("deadline ".length());
+            } else if ((command.equals("deadline") || command.startsWith("deadline ")) && taskCount < MAX_TASKS) {
+                String deadlineDetails = command.length() > "deadline".length()
+                        ? command.substring("deadline".length()).trim() : "";
                 int byMarker = deadlineDetails.indexOf(" /by ");
                 String description = byMarker >= 0
                         ? deadlineDetails.substring(0, byMarker).trim()
@@ -96,24 +108,32 @@ public class Monkey {
                 String by = byMarker >= 0
                         ? deadlineDetails.substring(byMarker + " /by ".length()).trim()
                         : "";
+                if (description.isEmpty() || by.isEmpty()) {
+                    throw new MonkeyException("A deadline needs a description and a /by date or time. Don't let that banana go rotten!");
+                }
                 tasks[taskCount] = new Deadline(description, by);
                 taskCount++;
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  " + tasks[taskCount - 1]);
                 System.out.println("Now you have " + taskCount + " tasks in the list.");
-            } else if (command.startsWith("todo ") && taskCount < MAX_TASKS) {
-                String description = command.substring("todo ".length()).trim();
+            } else if ((command.equals("todo") || command.startsWith("todo ")) && taskCount < MAX_TASKS) {
+                String description = command.length() > "todo".length()
+                        ? command.substring("todo".length()).trim() : "";
+                if (description.isEmpty()) {
+                    throw new MonkeyException("A todo needs a description. This monkey cannot fetch an invisible banana!");
+                }
                 tasks[taskCount] = new ToDos(description);
                 taskCount++;
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  " + tasks[taskCount - 1]);
                 System.out.println("Now you have " + taskCount + " tasks in the list.");
-            } else if (taskCount < MAX_TASKS) {
-                tasks[taskCount] = new Task(command);
-                taskCount++;
-                System.out.println("added: " + command);
-            } else {
+                } else if (taskCount >= MAX_TASKS) {
                 System.out.println("Sorry, I can only store up to " + MAX_TASKS + " tasks.");
+                } else {
+                    throw new MonkeyException("This monkey does not recognize that command. Try todo, deadline, event, list, mark, unmark, or bye.");
+                }
+            } catch (MonkeyException | IllegalArgumentException e) {
+                System.out.println("OOPS! Monkey says: " + e.getMessage());
             }
 
             System.out.println(separator);
