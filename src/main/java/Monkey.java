@@ -39,8 +39,7 @@ public class Monkey {
                     System.out.println("Here are the tasks in your list:");
                 }
                 for (int i = 0; i < taskCount; i++) {
-                    System.out.println((i + 1) + ".[" + tasks[i].getStatusIcon() + "] "
-                            + tasks[i].getDescription());
+                    System.out.println((i + 1) + "." + tasks[i]);
                 }
             } else if (command.startsWith("mark ")) {
                 String taskNumber = command.substring("mark ".length()).trim();
@@ -49,8 +48,7 @@ public class Monkey {
                     if (index >= 0 && index < taskCount) {
                         tasks[index].markAsDone();
                         System.out.println("Nice! I've marked this task as done:");
-                        System.out.println("  [" + tasks[index].getStatusIcon() + "] "
-                                + tasks[index].getDescription());
+                        System.out.println("  " + tasks[index]);
                     } else {
                         System.out.println("That task number does not exist.");
                     }
@@ -64,14 +62,20 @@ public class Monkey {
                     if (index >= 0 && index < taskCount) {
                         tasks[index].markAsNotDone();
                         System.out.println("OK, I've marked this task as not done yet:");
-                        System.out.println("  [" + tasks[index].getStatusIcon() + "] "
-                                + tasks[index].getDescription());
+                        System.out.println("  " + tasks[index]);
                     } else {
                         System.out.println("That task number does not exist.");
                     }
                 } catch (NumberFormatException e) {
                     System.out.println("Please specify a valid task number.");
                 }
+            } else if (command.startsWith("todo ") && taskCount < MAX_TASKS) {
+                String description = command.substring("todo ".length()).trim();
+                tasks[taskCount] = new ToDos(description);
+                taskCount++;
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + tasks[taskCount - 1]);
+                System.out.println("Now you have " + taskCount + " tasks in the list.");
             } else if (taskCount < MAX_TASKS) {
                 tasks[taskCount] = new Task(command);
                 taskCount++;

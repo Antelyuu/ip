@@ -24,8 +24,9 @@ public class Task {
         isDone = false;
     }
 
-    /** Returns the task description. */
-    public String getDescription() {
-        return description;
+    /** Returns this task in the format used by the task list. */
+    @Override
+    public String toString() {
+        return "[" + getStatusIcon() + "] " + description;
     }
 }
