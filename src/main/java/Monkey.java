@@ -69,6 +69,24 @@ public class Monkey {
                 } catch (NumberFormatException e) {
                     System.out.println("Please specify a valid task number.");
                 }
+            } else if (command.startsWith("event ") && taskCount < MAX_TASKS) {
+                String eventDetails = command.substring("event ".length());
+                int fromMarker = eventDetails.indexOf(" /from ");
+                int toMarker = eventDetails.indexOf(" /to ", fromMarker + 1);
+                String description = fromMarker >= 0
+                        ? eventDetails.substring(0, fromMarker).trim()
+                        : eventDetails.trim();
+                String from = fromMarker >= 0 && toMarker >= 0
+                        ? eventDetails.substring(fromMarker + " /from ".length(), toMarker).trim()
+                        : "";
+                String to = toMarker >= 0
+                        ? eventDetails.substring(toMarker + " /to ".length()).trim()
+                        : "";
+                tasks[taskCount] = new Event(description, from, to);
+                taskCount++;
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + tasks[taskCount - 1]);
+                System.out.println("Now you have " + taskCount + " tasks in the list.");
             } else if (command.startsWith("deadline ") && taskCount < MAX_TASKS) {
                 String deadlineDetails = command.substring("deadline ".length());
                 int byMarker = deadlineDetails.indexOf(" /by ");
