@@ -31,22 +31,23 @@ public class Monkey {
                     throw new MonkeyException("This monkey heard nothing! Please swing over a command.");
                 }
 
-                if (command.equals("bye")) {
+                Command commandType = Command.fromInput(command);
+                if (commandType == Command.BYE) {
                     System.out.println("Bye! Keep swinging, and I hope to see you again soon!");
                     System.out.println(separator);
                     break;
                 }
 
-                if (command.equals("list")) {
+                if (commandType == Command.LIST) {
                 if (!tasks.isEmpty()) {
                     System.out.println("Here are the tasks in your list:");
                 }
                 for (int i = 0; i < tasks.size(); i++) {
                     System.out.println((i + 1) + "." + tasks.get(i));
                 }
-                } else if (command.equals("mark") || command.startsWith("mark ")) {
-                String taskNumber = command.length() > "mark".length()
-                        ? command.substring("mark".length()).trim() : "";
+                } else if (commandType == Command.MARK) {
+                String taskNumber = command.length() > commandType.getKeyword().length()
+                        ? command.substring(commandType.getKeyword().length()).trim() : "";
                 try {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < tasks.size()) {
@@ -59,9 +60,9 @@ public class Monkey {
                 } catch (NumberFormatException e) {
                     throw new MonkeyException("That banana-shaped task number does not look right. Use a number after 'mark'.");
                 }
-            } else if (command.equals("unmark") || command.startsWith("unmark ")) {
-                String taskNumber = command.length() > "unmark".length()
-                        ? command.substring("unmark".length()).trim() : "";
+            } else if (commandType == Command.UNMARK) {
+                String taskNumber = command.length() > commandType.getKeyword().length()
+                        ? command.substring(commandType.getKeyword().length()).trim() : "";
                 try {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < tasks.size()) {
@@ -74,9 +75,9 @@ public class Monkey {
                 } catch (NumberFormatException e) {
                     throw new MonkeyException("This monkey needs a valid task number after 'unmark'.");
                 }
-            } else if (command.equals("delete") || command.startsWith("delete ")) {
-                String taskNumber = command.length() > "delete".length()
-                        ? command.substring("delete".length()).trim() : "";
+            } else if (commandType == Command.DELETE) {
+                String taskNumber = command.length() > commandType.getKeyword().length()
+                        ? command.substring(commandType.getKeyword().length()).trim() : "";
                 try {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < tasks.size()) {
@@ -90,9 +91,9 @@ public class Monkey {
                 } catch (NumberFormatException e) {
                     throw new MonkeyException("This monkey needs a valid task number after 'delete'.");
                 }
-            } else if (command.equals("event") || command.startsWith("event ")) {
-                String eventDetails = command.length() > "event".length()
-                        ? command.substring("event".length()).trim() : "";
+            } else if (commandType == Command.EVENT) {
+                String eventDetails = command.length() > commandType.getKeyword().length()
+                        ? command.substring(commandType.getKeyword().length()).trim() : "";
                 int fromMarker = eventDetails.indexOf(" /from ");
                 int toMarker = eventDetails.indexOf(" /to ", fromMarker + 1);
                 String description = fromMarker >= 0
@@ -111,9 +112,9 @@ public class Monkey {
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  " + tasks.get(tasks.size() - 1));
                 System.out.println("Now you have " + tasks.size() + " tasks in the list.");
-            } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-                String deadlineDetails = command.length() > "deadline".length()
-                        ? command.substring("deadline".length()).trim() : "";
+            } else if (commandType == Command.DEADLINE) {
+                String deadlineDetails = command.length() > commandType.getKeyword().length()
+                        ? command.substring(commandType.getKeyword().length()).trim() : "";
                 int byMarker = deadlineDetails.indexOf(" /by ");
                 String description = byMarker >= 0
                         ? deadlineDetails.substring(0, byMarker).trim()
@@ -128,9 +129,9 @@ public class Monkey {
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  " + tasks.get(tasks.size() - 1));
                 System.out.println("Now you have " + tasks.size() + " tasks in the list.");
-            } else if (command.equals("todo") || command.startsWith("todo ")) {
-                String description = command.length() > "todo".length()
-                        ? command.substring("todo".length()).trim() : "";
+            } else if (commandType == Command.TODO) {
+                String description = command.length() > commandType.getKeyword().length()
+                        ? command.substring(commandType.getKeyword().length()).trim() : "";
                 if (description.isEmpty()) {
                     throw new MonkeyException("A todo needs a description. This monkey cannot fetch an invisible banana!");
                 }
