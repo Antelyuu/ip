@@ -36,6 +36,9 @@ public class Monkey {
             }
 
             if (command.equals("list")) {
+                if (taskCount > 0) {
+                    System.out.println("Here are the tasks in your list:");
+                }
                 for (int i = 0; i < taskCount; i++) {
                     String status = completed[i] ? "X" : " ";
                     System.out.println((i + 1) + ".[" + status + "] " + tasks[i]);
@@ -48,6 +51,20 @@ public class Monkey {
                         completed[index] = true;
                         System.out.println("Nice! I've marked this task as done:");
                         System.out.println("  [X] " + tasks[index]);
+                    } else {
+                        System.out.println("That task number does not exist.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Please specify a valid task number.");
+                }
+            } else if (command.startsWith("unmark ")) {
+                String taskNumber = command.substring("unmark ".length()).trim();
+                try {
+                    int index = Integer.parseInt(taskNumber) - 1;
+                    if (index >= 0 && index < taskCount) {
+                        completed[index] = false;
+                        System.out.println("OK, I've marked this task as not done yet:");
+                        System.out.println("  [ ] " + tasks[index]);
                     } else {
                         System.out.println("That task number does not exist.");
                     }
