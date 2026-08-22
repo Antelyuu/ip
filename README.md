@@ -24,3 +24,20 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    ```
 
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+
+## Command-line UI tests
+
+The project-specific `test-ui` skill uses the test cases in
+[`test/ui-test-plan.md`](test/ui-test-plan.md). From the repository root,
+compile the application and run the plan with:
+
+```bash
+rm -rf /tmp/monkey-ui-classes
+mkdir -p /tmp/monkey-ui-classes
+javac -d /tmp/monkey-ui-classes src/main/java/*.java
+python3 .codex/skills/test-ui/scripts/run-ui-tests.py \
+  --command 'java -cp /tmp/monkey-ui-classes Monkey' \
+  --plan test/ui-test-plan.md
+```
+
+The runner prints the console session and stops at the first failed test.
