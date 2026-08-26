@@ -33,6 +33,7 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
+Apply the project-specific `git-conventions` skill when naming branches or creating or reviewing commit messages.
 
 ## UI regression testing after code changes
 
