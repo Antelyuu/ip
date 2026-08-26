@@ -9,21 +9,22 @@ import java.util.List;
 
 /** Saves Monkey's task list in a simple, human-readable text format. */
 public class Storage {
-    private static final Path FILE_PATH = Paths.get("data", "duke.txt");
+    private final Path filePath;
 
-    private Storage() {
-        // Utility class.
+    /** Creates storage backed by the given file path. */
+    public Storage(String filePath) {
+        this.filePath = Paths.get(filePath);
     }
 
     /** Reads the saved task list, returning an empty list when no save exists yet. */
-    public static ArrayList<Task> load() {
+    public ArrayList<Task> load() {
         ArrayList<Task> tasks = new ArrayList<>();
-        if (!Files.exists(FILE_PATH)) {
+        if (!Files.exists(filePath)) {
             return tasks;
         }
 
         try {
-            for (String line : Files.readAllLines(FILE_PATH)) {
+            for (String line : Files.readAllLines(filePath)) {
                 Task task = parseTask(line);
                 if (task != null) {
                     tasks.add(task);
@@ -36,13 +37,13 @@ public class Storage {
     }
 
     /** Writes the current task list to disk, replacing the previous snapshot. */
-    public static void save(List<Task> tasks) {
+    public void save(List<Task> tasks) {
         if (tasks == null) {
             return;
         }
-        Path temporaryPath = FILE_PATH.resolveSibling(FILE_PATH.getFileName() + ".tmp");
+        Path temporaryPath = filePath.resolveSibling(filePath.getFileName() + ".tmp");
         try {
-            Files.createDirectories(FILE_PATH.getParent());
+            Files.createDirectories(filePath.getParent());
             try (BufferedWriter writer = Files.newBufferedWriter(temporaryPath)) {
                 for (Task task : tasks) {
                     if (task != null) {
@@ -52,10 +53,10 @@ public class Storage {
                 }
             }
             try {
-                Files.move(temporaryPath, FILE_PATH, StandardCopyOption.ATOMIC_MOVE,
+                Files.move(temporaryPath, filePath, StandardCopyOption.ATOMIC_MOVE,
                         StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
-                Files.move(temporaryPath, FILE_PATH, StandardCopyOption.REPLACE_EXISTING);
+                Files.move(temporaryPath, filePath, StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (IOException e) {
             System.out.println("OOPS! Monkey could not save your tasks: " + e.getMessage());
