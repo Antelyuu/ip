@@ -52,6 +52,8 @@ public class Monkey {
                 parser.parseAction(command).execute(tasks, ui, storage);
             } else if (commandType == Command.TODO) {
                 parser.parseAction(command).execute(tasks, ui, storage);
+                } else if (commandType == Command.FIND) {
+                    parser.parseAction(command).execute(tasks, ui, storage);
                 } else {
                     parser.parseAction(command).execute(tasks, ui, storage);
                 }

@@ -30,6 +30,9 @@ public class Parser {
         if (command == Command.LIST) {
             return new ListCommand();
         }
+        if (command == Command.FIND) {
+            return new FindCommand(parseArguments(input, command));
+        }
         if (command == Command.MARK || command == Command.UNMARK) {
             return new MarkCommand(parseArguments(input, command), command == Command.MARK);
         }
