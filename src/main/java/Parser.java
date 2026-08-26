@@ -11,6 +11,11 @@ public class Parser {
         return new ParsedCommand(command, parseArguments(input, command));
     }
 
+    /** Creates an executable command object for commands already supported by the stretch design. */
+    public CommandAction parseAction(String input) {
+        return parseCommand(input) == Command.BYE ? new ExitCommand() : null;
+    }
+
     /** Returns the text following the command keyword, trimmed. */
     public String parseArguments(String input, Command command) {
         int keywordLength = command.getKeyword().length();

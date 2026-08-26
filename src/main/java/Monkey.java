@@ -23,7 +23,8 @@ public class Monkey {
                 Command commandType = parsedCommand.command();
                 String arguments = parsedCommand.arguments();
                 if (commandType == Command.BYE) {
-                    System.out.println("Bye! Keep swinging, and I hope to see you again soon!");
+                    CommandAction exitCommand = parser.parseAction(command);
+                    exitCommand.execute(tasks, ui, storage);
                     ui.showSeparator();
                     break;
                 }
