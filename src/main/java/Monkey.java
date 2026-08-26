@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 /** A simple command-line task manager. */
 public class Monkey {
@@ -7,7 +6,7 @@ public class Monkey {
         Ui ui = new Ui();
         ui.showWelcome();
 
-        ArrayList<Task> tasks = Storage.load();
+        TaskList tasks = new TaskList(Storage.load());
 
         String command;
         while ((command = ui.readCommand()) != null) {
@@ -39,7 +38,7 @@ public class Monkey {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < tasks.size()) {
                         tasks.get(index).markAsDone();
-                        Storage.save(tasks);
+                        Storage.save(tasks.asList());
                         System.out.println("Nice! I've marked this task as done:");
                         System.out.println("  " + tasks.get(index));
                     } else {
@@ -55,7 +54,7 @@ public class Monkey {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < tasks.size()) {
                         tasks.get(index).markAsNotDone();
-                        Storage.save(tasks);
+                        Storage.save(tasks.asList());
                         System.out.println("OK, I've marked this task as not done yet:");
                         System.out.println("  " + tasks.get(index));
                     } else {
@@ -71,7 +70,7 @@ public class Monkey {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < tasks.size()) {
                         Task removedTask = tasks.remove(index);
-                        Storage.save(tasks);
+                        Storage.save(tasks.asList());
                         System.out.println("Noted. I've removed this task:");
                         System.out.println("  " + removedTask);
                         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
@@ -99,7 +98,7 @@ public class Monkey {
                     throw new MonkeyException("An event needs a description, a /from time, and a /to time. Even monkeys need a schedule!");
                 }
                 tasks.add(new Event(description, from, to));
-                Storage.save(tasks);
+                Storage.save(tasks.asList());
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  " + tasks.get(tasks.size() - 1));
                 System.out.println("Now you have " + tasks.size() + " tasks in the list.");
@@ -117,7 +116,7 @@ public class Monkey {
                     throw new MonkeyException("A deadline needs a description and a /by date or time. Don't let that banana go rotten!");
                 }
                 tasks.add(new Deadline(description, by));
-                Storage.save(tasks);
+                Storage.save(tasks.asList());
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  " + tasks.get(tasks.size() - 1));
                 System.out.println("Now you have " + tasks.size() + " tasks in the list.");
@@ -128,7 +127,7 @@ public class Monkey {
                     throw new MonkeyException("A todo needs a description. This monkey cannot fetch an invisible banana!");
                 }
                 tasks.add(new ToDos(description));
-                Storage.save(tasks);
+                Storage.save(tasks.asList());
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  " + tasks.get(tasks.size() - 1));
                 System.out.println("Now you have " + tasks.size() + " tasks in the list.");
