@@ -70,7 +70,7 @@ public class Monkey {
                 try {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < tasks.size()) {
-                        Task removedTask = tasks.remove(index);
+                        Task removedTask = tasks.delete(index);
                         storage.save(tasks.asList());
                         System.out.println("Noted. I've removed this task:");
                         System.out.println("  " + removedTask);

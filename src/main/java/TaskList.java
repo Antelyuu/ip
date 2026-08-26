@@ -23,6 +23,9 @@ public class TaskList {
     /** Marks the task at the given zero-based index as not done. */
     public void unmark(int index) { tasks.get(index).markAsNotDone(); }
 
+    /** Removes and returns the task at the given zero-based index. */
+    public Task delete(int index) { return tasks.remove(index); }
+
     /** Returns a snapshot suitable for persistence. */
     public List<Task> asList() { return new ArrayList<>(tasks); }
 }
