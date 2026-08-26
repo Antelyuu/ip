@@ -40,7 +40,7 @@ public class Monkey {
                 try {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < tasks.size()) {
-                        tasks.get(index).markAsDone();
+                        tasks.mark(index);
                         storage.save(tasks.asList());
                         System.out.println("Nice! I've marked this task as done:");
                         System.out.println("  " + tasks.get(index));
@@ -55,7 +55,7 @@ public class Monkey {
                 try {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < tasks.size()) {
-                        tasks.get(index).markAsNotDone();
+                        tasks.unmark(index);
                         storage.save(tasks.asList());
                         System.out.println("OK, I've marked this task as not done yet:");
                         System.out.println("  " + tasks.get(index));

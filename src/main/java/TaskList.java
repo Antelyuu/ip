@@ -17,6 +17,12 @@ public class TaskList {
     public void add(Task task) { tasks.add(task); }
     public Task remove(int index) { return tasks.remove(index); }
 
+    /** Marks the task at the given zero-based index as done. */
+    public void mark(int index) { tasks.get(index).markAsDone(); }
+
+    /** Marks the task at the given zero-based index as not done. */
+    public void unmark(int index) { tasks.get(index).markAsNotDone(); }
+
     /** Returns a snapshot suitable for persistence. */
     public List<Task> asList() { return new ArrayList<>(tasks); }
 }
