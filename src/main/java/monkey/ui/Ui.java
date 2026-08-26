@@ -28,8 +28,12 @@ public class Ui {
     }
 
     /** Shows the boundary between command interactions. */
-    public void showSeparator() { System.out.println(SEPARATOR); }
+    public void showSeparator() {
+        System.out.println(SEPARATOR);
+    }
 
     /** Shows a message to the user. */
-    public void showMessage(String message) { System.out.println(message); }
+    public void showMessage(String message) {
+        System.out.println(message);
+    }
 }

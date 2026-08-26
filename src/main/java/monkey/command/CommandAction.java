@@ -1,8 +1,8 @@
 package monkey.command;
 
-import monkey.model.*;
-import monkey.storage.*;
-import monkey.ui.*;
+import monkey.model.TaskList;
+import monkey.storage.Storage;
+import monkey.ui.Ui;
 
 /** A command object that can perform one application action. */
 public abstract class CommandAction {
@@ -10,5 +10,7 @@ public abstract class CommandAction {
     public abstract void execute(TaskList tasks, Ui ui, Storage storage);
 
     /** Returns whether running this command should end the application. */
-    public boolean isExit() { return false; }
+    public boolean isExit() {
+        return false;
+    }
 }

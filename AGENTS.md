@@ -1,5 +1,7 @@
 # Project context
 
+All Java code in this project MUST follow the project-specific `seedu-java-coding-standard` skill in `.codex/skills/seedu-java-coding-standard/SKILL.md`, based on the SE-EDU basic and intermediate Java coding standard. Apply it when writing, reviewing, or modifying any Java source file.
+
 This repository is a starter template for a greenfield Java project used in an introductory software engineering course in an undergraduate computer science program. Students use it as the starting point for their own projects.
 
 # Default user context
@@ -31,9 +33,9 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
 ## Git
 
 Use lightweight tags unless the user requests an annotated tag.
-When proposing or creating a commit message, include enough detail to explain the rationale for the change.
+All future commits and branch names MUST follow the project-specific `seedu-git-standard` skill in `.codex/skills/seedu-git-standard/SKILL.md`, based on the SE-EDU Git conventions. Apply it whenever proposing, reviewing, or creating a commit or branch name.
+When proposing or creating a commit message, include enough detail to explain what changed and why.
 Do not commit or push unless explicitly asked.
-Apply the project-specific `git-conventions` skill when naming branches or creating or reviewing commit messages.
 
 ## UI regression testing after code changes
 

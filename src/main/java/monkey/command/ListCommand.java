@@ -1,8 +1,8 @@
 package monkey.command;
 
-import monkey.model.*;
-import monkey.storage.*;
-import monkey.ui.*;
+import monkey.model.TaskList;
+import monkey.storage.Storage;
+import monkey.ui.Ui;
 
 /** Command object for displaying the current task list. */
 public class ListCommand extends CommandAction {

@@ -1,7 +1,5 @@
 package monkey.storage;
 
-import monkey.model.*;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,6 +8,11 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+
+import monkey.model.Deadline;
+import monkey.model.Event;
+import monkey.model.Task;
+import monkey.model.ToDos;
 
 /** Saves Monkey's task list in a simple, human-readable text format. */
 public class Storage {

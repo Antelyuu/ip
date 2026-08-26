@@ -1,8 +1,11 @@
 package monkey.command;
 
-import monkey.model.*;
-import monkey.storage.*;
-import monkey.ui.*;
+import monkey.model.Deadline;
+import monkey.model.Event;
+import monkey.model.Task;
+import monkey.model.TaskList;
+import monkey.storage.Storage;
+import monkey.ui.Ui;
 
 /** Command object for adding deadline and event tasks. */
 public class AddCommand extends CommandAction {

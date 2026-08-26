@@ -1,12 +1,13 @@
 package monkey;
 
-import monkey.command.*;
-import monkey.exception.*;
-import monkey.parser.*;
-import monkey.storage.*;
-import monkey.ui.*;
-import monkey.model.*;
-
+import monkey.command.Command;
+import monkey.command.CommandAction;
+import monkey.exception.MonkeyException;
+import monkey.model.TaskList;
+import monkey.parser.ParsedCommand;
+import monkey.parser.Parser;
+import monkey.storage.Storage;
+import monkey.ui.Ui;
 
 /** A simple command-line task manager. */
 public class Monkey {
@@ -39,19 +40,19 @@ public class Monkey {
                 }
 
                 if (commandType == Command.LIST) {
-                parser.parseAction(command).execute(tasks, ui, storage);
+                    parser.parseAction(command).execute(tasks, ui, storage);
                 } else if (commandType == Command.MARK) {
-                parser.parseAction(command).execute(tasks, ui, storage);
-            } else if (commandType == Command.UNMARK) {
-                parser.parseAction(command).execute(tasks, ui, storage);
-            } else if (commandType == Command.DELETE) {
-                parser.parseAction(command).execute(tasks, ui, storage);
-            } else if (commandType == Command.EVENT) {
-                parser.parseAction(command).execute(tasks, ui, storage);
-            } else if (commandType == Command.DEADLINE) {
-                parser.parseAction(command).execute(tasks, ui, storage);
-            } else if (commandType == Command.TODO) {
-                parser.parseAction(command).execute(tasks, ui, storage);
+                    parser.parseAction(command).execute(tasks, ui, storage);
+                } else if (commandType == Command.UNMARK) {
+                    parser.parseAction(command).execute(tasks, ui, storage);
+                } else if (commandType == Command.DELETE) {
+                    parser.parseAction(command).execute(tasks, ui, storage);
+                } else if (commandType == Command.EVENT) {
+                    parser.parseAction(command).execute(tasks, ui, storage);
+                } else if (commandType == Command.DEADLINE) {
+                    parser.parseAction(command).execute(tasks, ui, storage);
+                } else if (commandType == Command.TODO) {
+                    parser.parseAction(command).execute(tasks, ui, storage);
                 } else if (commandType == Command.FIND) {
                     parser.parseAction(command).execute(tasks, ui, storage);
                 } else {

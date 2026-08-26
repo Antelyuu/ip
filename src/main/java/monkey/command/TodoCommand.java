@@ -1,15 +1,17 @@
 package monkey.command;
 
-import monkey.model.*;
-import monkey.storage.*;
-import monkey.ui.*;
+import monkey.model.TaskList;
+import monkey.model.ToDos;
+import monkey.storage.Storage;
+import monkey.ui.Ui;
 
 /** Command object for adding a todo task. */
 public class TodoCommand extends CommandAction {
     private final String description;
 
-    /** Creates a command for adding a todo with the given description. */
-    public TodoCommand(String description) { this.description = description; }
+    public TodoCommand(String description) {
+        this.description = description;
+    }
 
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
