@@ -4,6 +4,7 @@ public class Monkey {
     /** Runs the task manager and processes commands until the user says bye. */
     public static void main(String[] args) {
         Ui ui = new Ui();
+        Parser parser = new Parser();
         ui.showWelcome();
 
         TaskList tasks = new TaskList(Storage.load());
@@ -17,7 +18,7 @@ public class Monkey {
                     throw new MonkeyException("This monkey heard nothing! Please swing over a command.");
                 }
 
-                Command commandType = Command.fromInput(command);
+                Command commandType = parser.parseCommand(command);
                 if (commandType == Command.BYE) {
                     System.out.println("Bye! Keep swinging, and I hope to see you again soon!");
                     ui.showSeparator();
@@ -32,8 +33,7 @@ public class Monkey {
                     System.out.println((i + 1) + "." + tasks.get(i));
                 }
                 } else if (commandType == Command.MARK) {
-                String taskNumber = command.length() > commandType.getKeyword().length()
-                        ? command.substring(commandType.getKeyword().length()).trim() : "";
+                String taskNumber = parser.parseArguments(command, commandType);
                 try {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < tasks.size()) {
@@ -48,8 +48,7 @@ public class Monkey {
                     throw new MonkeyException("That banana-shaped task number does not look right. Use a number after 'mark'.");
                 }
             } else if (commandType == Command.UNMARK) {
-                String taskNumber = command.length() > commandType.getKeyword().length()
-                        ? command.substring(commandType.getKeyword().length()).trim() : "";
+                String taskNumber = parser.parseArguments(command, commandType);
                 try {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < tasks.size()) {
@@ -64,8 +63,7 @@ public class Monkey {
                     throw new MonkeyException("This monkey needs a valid task number after 'unmark'.");
                 }
             } else if (commandType == Command.DELETE) {
-                String taskNumber = command.length() > commandType.getKeyword().length()
-                        ? command.substring(commandType.getKeyword().length()).trim() : "";
+                String taskNumber = parser.parseArguments(command, commandType);
                 try {
                     int index = Integer.parseInt(taskNumber) - 1;
                     if (index >= 0 && index < tasks.size()) {
@@ -81,8 +79,7 @@ public class Monkey {
                     throw new MonkeyException("This monkey needs a valid task number after 'delete'.");
                 }
             } else if (commandType == Command.EVENT) {
-                String eventDetails = command.length() > commandType.getKeyword().length()
-                        ? command.substring(commandType.getKeyword().length()).trim() : "";
+                String eventDetails = parser.parseArguments(command, commandType);
                 int fromMarker = eventDetails.indexOf(" /from ");
                 int toMarker = eventDetails.indexOf(" /to ", fromMarker + 1);
                 String description = fromMarker >= 0
@@ -103,8 +100,7 @@ public class Monkey {
                 System.out.println("  " + tasks.get(tasks.size() - 1));
                 System.out.println("Now you have " + tasks.size() + " tasks in the list.");
             } else if (commandType == Command.DEADLINE) {
-                String deadlineDetails = command.length() > commandType.getKeyword().length()
-                        ? command.substring(commandType.getKeyword().length()).trim() : "";
+                String deadlineDetails = parser.parseArguments(command, commandType);
                 int byMarker = deadlineDetails.indexOf(" /by ");
                 String description = byMarker >= 0
                         ? deadlineDetails.substring(0, byMarker).trim()
@@ -121,8 +117,7 @@ public class Monkey {
                 System.out.println("  " + tasks.get(tasks.size() - 1));
                 System.out.println("Now you have " + tasks.size() + " tasks in the list.");
             } else if (commandType == Command.TODO) {
-                String description = command.length() > commandType.getKeyword().length()
-                        ? command.substring(commandType.getKeyword().length()).trim() : "";
+                String description = parser.parseArguments(command, commandType);
                 if (description.isEmpty()) {
                     throw new MonkeyException("A todo needs a description. This monkey cannot fetch an invisible banana!");
                 }
