@@ -23,6 +23,9 @@ public class Parser {
         if (command == Command.TODO) {
             return new TodoCommand(parseArguments(input, command));
         }
+        if (command == Command.MARK || command == Command.UNMARK) {
+            return new MarkCommand(parseArguments(input, command), command == Command.MARK);
+        }
         return null;
     }
 

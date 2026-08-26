@@ -37,35 +37,9 @@ public class Monkey {
                     System.out.println((i + 1) + "." + tasks.get(i));
                 }
                 } else if (commandType == Command.MARK) {
-                String taskNumber = arguments;
-                try {
-                    int index = Integer.parseInt(taskNumber) - 1;
-                    if (index >= 0 && index < tasks.size()) {
-                        tasks.mark(index);
-                        storage.save(tasks.asList());
-                        System.out.println("Nice! I've marked this task as done:");
-                        System.out.println("  " + tasks.get(index));
-                    } else {
-                        System.out.println("That task number does not exist.");
-                    }
-                } catch (NumberFormatException e) {
-                    throw new MonkeyException("That banana-shaped task number does not look right. Use a number after 'mark'.");
-                }
+                parser.parseAction(command).execute(tasks, ui, storage);
             } else if (commandType == Command.UNMARK) {
-                String taskNumber = arguments;
-                try {
-                    int index = Integer.parseInt(taskNumber) - 1;
-                    if (index >= 0 && index < tasks.size()) {
-                        tasks.unmark(index);
-                        storage.save(tasks.asList());
-                        System.out.println("OK, I've marked this task as not done yet:");
-                        System.out.println("  " + tasks.get(index));
-                    } else {
-                        System.out.println("That task number does not exist.");
-                    }
-                } catch (NumberFormatException e) {
-                    throw new MonkeyException("This monkey needs a valid task number after 'unmark'.");
-                }
+                parser.parseAction(command).execute(tasks, ui, storage);
             } else if (commandType == Command.DELETE) {
                 parser.parseAction(command).execute(tasks, ui, storage);
             } else if (commandType == Command.EVENT) {
