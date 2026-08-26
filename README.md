@@ -34,9 +34,9 @@ compile the application and run the plan with:
 ```bash
 rm -rf /tmp/monkey-ui-classes
 mkdir -p /tmp/monkey-ui-classes
-javac -d /tmp/monkey-ui-classes src/main/java/*.java
+javac -d /tmp/monkey-ui-classes $(find src/main/java -name '*.java')
 python3 .codex/skills/test-ui/scripts/run-ui-tests.py \
-  --command 'java -cp /tmp/monkey-ui-classes Monkey' \
+  --command 'java -cp /tmp/monkey-ui-classes monkey.Monkey' \
   --plan test/ui-test-plan.md
 ```
 
