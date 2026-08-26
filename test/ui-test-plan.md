@@ -2,6 +2,27 @@
 
 Each command is run in a fresh process. Expected output is compared exactly.
 
+## Test case: find tasks by keyword
+
+Aim: Verify that `find` displays matching tasks in their original order.
+
+### Command
+```text
+todo read book
+todo buy milk
+todo return book
+find book
+bye
+```
+
+### Expected output
+The `find book` interaction displays:
+```text
+Here are the matching tasks in your list:
+1.[T][ ] read book
+2.[T][ ] return book
+```
+
 ## Test case: exit immediately
 
 Aim: Verify that the program starts and exits when the user enters `bye`.
