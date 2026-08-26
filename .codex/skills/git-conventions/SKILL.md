@@ -1,9 +1,11 @@
 ---
 name: git-conventions
-description: Apply the project's Git conventions when naming branches or creating and reviewing commit messages.
+description: Compatibility alias for the project-specific seedu-git-standard skill.
 ---
 
 # Git conventions
+
+Use `.codex/skills/seedu-git-standard/SKILL.md` as the canonical project standard for branches and commits.
 
 Use these rules when proposing, reviewing, or creating a branch name or commit message.
 
