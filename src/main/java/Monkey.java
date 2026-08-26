@@ -30,12 +30,7 @@ public class Monkey {
                 }
 
                 if (commandType == Command.LIST) {
-                if (!tasks.isEmpty()) {
-                    System.out.println("Here are the tasks in your list:");
-                }
-                for (int i = 0; i < tasks.size(); i++) {
-                    System.out.println((i + 1) + "." + tasks.get(i));
-                }
+                parser.parseAction(command).execute(tasks, ui, storage);
                 } else if (commandType == Command.MARK) {
                 parser.parseAction(command).execute(tasks, ui, storage);
             } else if (commandType == Command.UNMARK) {
@@ -43,43 +38,9 @@ public class Monkey {
             } else if (commandType == Command.DELETE) {
                 parser.parseAction(command).execute(tasks, ui, storage);
             } else if (commandType == Command.EVENT) {
-                String eventDetails = arguments;
-                int fromMarker = eventDetails.indexOf(" /from ");
-                int toMarker = eventDetails.indexOf(" /to ", fromMarker + 1);
-                String description = fromMarker >= 0
-                        ? eventDetails.substring(0, fromMarker).trim()
-                        : eventDetails.trim();
-                String from = fromMarker >= 0 && toMarker >= 0
-                        ? eventDetails.substring(fromMarker + " /from ".length(), toMarker).trim()
-                        : "";
-                String to = toMarker >= 0
-                        ? eventDetails.substring(toMarker + " /to ".length()).trim()
-                        : "";
-                if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                    throw new MonkeyException("An event needs a description, a /from time, and a /to time. Even monkeys need a schedule!");
-                }
-                tasks.add(new Event(description, from, to));
-                storage.save(tasks.asList());
-                System.out.println("Got it. I've added this task:");
-                System.out.println("  " + tasks.get(tasks.size() - 1));
-                System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                parser.parseAction(command).execute(tasks, ui, storage);
             } else if (commandType == Command.DEADLINE) {
-                String deadlineDetails = arguments;
-                int byMarker = deadlineDetails.indexOf(" /by ");
-                String description = byMarker >= 0
-                        ? deadlineDetails.substring(0, byMarker).trim()
-                        : deadlineDetails.trim();
-                String by = byMarker >= 0
-                        ? deadlineDetails.substring(byMarker + " /by ".length()).trim()
-                        : "";
-                if (description.isEmpty() || by.isEmpty()) {
-                    throw new MonkeyException("A deadline needs a description and a /by date or time. Don't let that banana go rotten!");
-                }
-                tasks.add(new Deadline(description, by));
-                storage.save(tasks.asList());
-                System.out.println("Got it. I've added this task:");
-                System.out.println("  " + tasks.get(tasks.size() - 1));
-                System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                parser.parseAction(command).execute(tasks, ui, storage);
             } else if (commandType == Command.TODO) {
                 parser.parseAction(command).execute(tasks, ui, storage);
                 } else {
