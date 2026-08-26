@@ -17,6 +17,16 @@ public class Task {
         return isDone ? "X" : " ";
     }
 
+    /** Returns the task description for persistence. */
+    public String getDescription() {
+        return description;
+    }
+
+    /** Returns whether this task has been completed. */
+    public boolean isDone() {
+        return isDone;
+    }
+
     /** Marks this task as done. */
     public void markAsDone() {
         isDone = true;

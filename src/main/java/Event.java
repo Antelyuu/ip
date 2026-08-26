@@ -10,6 +10,16 @@ public class Event extends Task {
         this.to = to;
     }
 
+    /** Returns the event start time for persistence. */
+    public String getFrom() {
+        return from;
+    }
+
+    /** Returns the event end time for persistence. */
+    public String getTo() {
+        return to;
+    }
+
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
