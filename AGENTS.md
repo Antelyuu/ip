@@ -49,3 +49,7 @@ After every code update:
    ```
 
    Report the console input/output session and stop at the first failed test. If the change has no UI impact, still invoke `test-ui`; document why the existing plan remains sufficient.
+
+## JUnit test coverage target
+
+Maintain JUnit coverage for at least the top 50% of methods that are highest-value to the project, prioritizing complex, core, state-mutating, or otherwise critical business logic. After every code change, review the affected methods and update or add JUnit tests as needed to keep this target satisfied. Tests should cover the reasonable success, boundary, and failure cases for the selected methods.
