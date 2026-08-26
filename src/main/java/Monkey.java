@@ -67,21 +67,7 @@ public class Monkey {
                     throw new MonkeyException("This monkey needs a valid task number after 'unmark'.");
                 }
             } else if (commandType == Command.DELETE) {
-                String taskNumber = arguments;
-                try {
-                    int index = Integer.parseInt(taskNumber) - 1;
-                    if (index >= 0 && index < tasks.size()) {
-                        Task removedTask = tasks.delete(index);
-                        storage.save(tasks.asList());
-                        System.out.println("Noted. I've removed this task:");
-                        System.out.println("  " + removedTask);
-                        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
-                    } else {
-                        System.out.println("That task number does not exist.");
-                    }
-                } catch (NumberFormatException e) {
-                    throw new MonkeyException("This monkey needs a valid task number after 'delete'.");
-                }
+                parser.parseAction(command).execute(tasks, ui, storage);
             } else if (commandType == Command.EVENT) {
                 String eventDetails = arguments;
                 int fromMarker = eventDetails.indexOf(" /from ");

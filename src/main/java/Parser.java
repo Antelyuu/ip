@@ -13,7 +13,14 @@ public class Parser {
 
     /** Creates an executable command object for commands already supported by the stretch design. */
     public CommandAction parseAction(String input) {
-        return parseCommand(input) == Command.BYE ? new ExitCommand() : null;
+        Command command = parseCommand(input);
+        if (command == Command.BYE) {
+            return new ExitCommand();
+        }
+        if (command == Command.DELETE) {
+            return new DeleteCommand(parseArguments(input, command));
+        }
+        return null;
     }
 
     /** Returns the text following the command keyword, trimmed. */
