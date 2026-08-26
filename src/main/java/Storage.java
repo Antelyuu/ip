@@ -71,7 +71,7 @@ public class Storage {
         String type = task instanceof Deadline ? "D" : task instanceof Event ? "E" : "T";
         String details = task.getDescription();
         if (task instanceof Deadline deadline) {
-            details += " | " + deadline.getBy();
+            details += " | " + deadline.getStorageValue();
         } else if (task instanceof Event event) {
             details += " | " + event.getFrom() + " | " + event.getTo();
         }
