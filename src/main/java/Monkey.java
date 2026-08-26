@@ -44,7 +44,7 @@ public class Monkey {
             } else if (commandType == Command.TODO) {
                 parser.parseAction(command).execute(tasks, ui, storage);
                 } else {
-                    throw new MonkeyException("This monkey does not recognize that command. Try todo, deadline, event, list, mark, unmark, delete, or bye.");
+                    parser.parseAction(command).execute(tasks, ui, storage);
                 }
             } catch (MonkeyException | IllegalArgumentException e) {
                 System.out.println("OOPS! Monkey says: " + e.getMessage());

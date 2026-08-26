@@ -32,7 +32,7 @@ public class Parser {
         if (command == Command.EVENT || command == Command.DEADLINE) {
             return new AddCommand(command, parseArguments(input, command));
         }
-        return null;
+        return new UnknownCommand();
     }
 
     /** Returns the text following the command keyword, trimmed. */
