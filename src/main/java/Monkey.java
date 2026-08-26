@@ -20,7 +20,7 @@ public class Monkey {
         System.out.println(separator);
 
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks = Storage.load();
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
