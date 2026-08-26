@@ -107,15 +107,7 @@ public class Monkey {
                 System.out.println("  " + tasks.get(tasks.size() - 1));
                 System.out.println("Now you have " + tasks.size() + " tasks in the list.");
             } else if (commandType == Command.TODO) {
-                String description = arguments;
-                if (description.isEmpty()) {
-                    throw new MonkeyException("A todo needs a description. This monkey cannot fetch an invisible banana!");
-                }
-                tasks.add(new ToDos(description));
-                storage.save(tasks.asList());
-                System.out.println("Got it. I've added this task:");
-                System.out.println("  " + tasks.get(tasks.size() - 1));
-                System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                parser.parseAction(command).execute(tasks, ui, storage);
                 } else {
                     throw new MonkeyException("This monkey does not recognize that command. Try todo, deadline, event, list, mark, unmark, delete, or bye.");
                 }

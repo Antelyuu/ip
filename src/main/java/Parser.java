@@ -20,6 +20,9 @@ public class Parser {
         if (command == Command.DELETE) {
             return new DeleteCommand(parseArguments(input, command));
         }
+        if (command == Command.TODO) {
+            return new TodoCommand(parseArguments(input, command));
+        }
         return null;
     }
 
