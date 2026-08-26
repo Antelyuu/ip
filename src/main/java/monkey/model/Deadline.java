@@ -36,6 +36,7 @@ public class Deadline extends Task {
         dateTime = parsedDateTime;
     }
 
+    /** Parses the supported date/time formats used by deadline input. */
     private static LocalDateTime parseDateTime(String value) {
         DateTimeFormatter[] formats = {
             DateTimeFormatter.ofPattern("d/M/uuuu HHmm"),

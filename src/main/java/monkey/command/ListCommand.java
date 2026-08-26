@@ -6,6 +6,9 @@ import monkey.ui.*;
 
 /** Command object for displaying the current task list. */
 public class ListCommand extends CommandAction {
+    /** Creates a command that displays all current tasks. */
+    public ListCommand() { }
+
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         if (!tasks.isEmpty()) {

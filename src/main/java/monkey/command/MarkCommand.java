@@ -9,6 +9,7 @@ public class MarkCommand extends CommandAction {
     private final String taskNumber;
     private final boolean markDone;
 
+    /** Creates a command that changes the completion state of a task. */
     public MarkCommand(String taskNumber, boolean markDone) {
         this.taskNumber = taskNumber;
         this.markDone = markDone;

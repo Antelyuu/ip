@@ -8,6 +8,7 @@ import monkey.ui.*;
 public class TodoCommand extends CommandAction {
     private final String description;
 
+    /** Creates a command for adding a todo with the given description. */
     public TodoCommand(String description) { this.description = description; }
 
     @Override

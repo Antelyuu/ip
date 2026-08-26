@@ -8,6 +8,7 @@ import monkey.ui.*;
 public class DeleteCommand extends CommandAction {
     private final String taskNumber;
 
+    /** Creates a command for deleting the task at the given user index. */
     public DeleteCommand(String taskNumber) { this.taskNumber = taskNumber; }
 
     @Override
