@@ -1,8 +1,8 @@
 package monkey.command;
 
-import monkey.model.*;
-import monkey.storage.*;
-import monkey.ui.*;
+import monkey.model.TaskList;
+import monkey.storage.Storage;
+import monkey.ui.Ui;
 
 /** Command object for marking a task done or not done. */
 public class MarkCommand extends CommandAction {

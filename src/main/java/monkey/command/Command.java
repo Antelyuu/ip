@@ -1,8 +1,5 @@
 package monkey.command;
 
-import monkey.model.*;
-import monkey.storage.*;
-import monkey.ui.*;
 
 /** Represents a command understood by Monkey. */
 public enum Command {

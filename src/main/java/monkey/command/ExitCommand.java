@@ -1,8 +1,8 @@
 package monkey.command;
 
-import monkey.model.*;
-import monkey.storage.*;
-import monkey.ui.*;
+import monkey.model.TaskList;
+import monkey.storage.Storage;
+import monkey.ui.Ui;
 
 /** Command object for ending the Monkey session. */
 public class ExitCommand extends CommandAction {
@@ -12,5 +12,7 @@ public class ExitCommand extends CommandAction {
     }
 
     @Override
-    public boolean isExit() { return true; }
+    public boolean isExit() {
+        return true;
+    }
 }

@@ -1,14 +1,17 @@
 package monkey.command;
 
-import monkey.model.*;
-import monkey.storage.*;
-import monkey.ui.*;
+import monkey.model.Task;
+import monkey.model.TaskList;
+import monkey.storage.Storage;
+import monkey.ui.Ui;
 
 /** Command object for deleting a task by its one-based user index. */
 public class DeleteCommand extends CommandAction {
     private final String taskNumber;
 
-    public DeleteCommand(String taskNumber) { this.taskNumber = taskNumber; }
+    public DeleteCommand(String taskNumber) {
+        this.taskNumber = taskNumber;
+    }
 
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
