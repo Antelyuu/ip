@@ -13,10 +13,19 @@ public class TaskList {
     /** Creates a task list containing the supplied tasks. */
     public TaskList(List<Task> tasks) { this.tasks = new ArrayList<>(tasks); }
 
+    /** Returns whether this list contains no tasks. */
     public boolean isEmpty() { return tasks.isEmpty(); }
+
+    /** Returns the number of tasks in this list. */
     public int size() { return tasks.size(); }
+
+    /** Returns the task at the given zero-based index. */
     public Task get(int index) { return tasks.get(index); }
+
+    /** Adds a task to the end of this list. */
     public void add(Task task) { tasks.add(task); }
+
+    /** Removes and returns the task at the given zero-based index. */
     public Task remove(int index) { return tasks.remove(index); }
 
     /** Marks the task at the given zero-based index as done. */

@@ -83,6 +83,7 @@ public class Storage {
         return type + " | " + (task.isDone() ? "1" : "0") + " | " + details;
     }
 
+    /** Reconstructs a task from one storage line, or returns null when invalid. */
     private static Task parseTask(String line) {
         if (line == null || line.trim().isEmpty()) {
             return null;

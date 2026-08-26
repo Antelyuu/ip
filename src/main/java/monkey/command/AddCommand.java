@@ -9,6 +9,7 @@ public class AddCommand extends CommandAction {
     private final Command type;
     private final String details;
 
+    /** Creates a command for adding an event or deadline from its raw details. */
     public AddCommand(Command type, String details) {
         this.type = type;
         this.details = details;
