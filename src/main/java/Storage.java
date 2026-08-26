@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,16 +37,33 @@ public class Storage {
 
     /** Writes the current task list to disk, replacing the previous snapshot. */
     public static void save(List<Task> tasks) {
+        if (tasks == null) {
+            return;
+        }
+        Path temporaryPath = FILE_PATH.resolveSibling(FILE_PATH.getFileName() + ".tmp");
         try {
             Files.createDirectories(FILE_PATH.getParent());
-            try (BufferedWriter writer = Files.newBufferedWriter(FILE_PATH)) {
+            try (BufferedWriter writer = Files.newBufferedWriter(temporaryPath)) {
                 for (Task task : tasks) {
-                    writer.write(formatTask(task));
-                    writer.newLine();
+                    if (task != null) {
+                        writer.write(formatTask(task));
+                        writer.newLine();
+                    }
                 }
+            }
+            try {
+                Files.move(temporaryPath, FILE_PATH, StandardCopyOption.ATOMIC_MOVE,
+                        StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                Files.move(temporaryPath, FILE_PATH, StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (IOException e) {
             System.out.println("OOPS! Monkey could not save your tasks: " + e.getMessage());
+            try {
+                Files.deleteIfExists(temporaryPath);
+            } catch (IOException ignored) {
+                // Preserve the original save error.
+            }
         }
     }
 
@@ -61,24 +79,31 @@ public class Storage {
     }
 
     private static Task parseTask(String line) {
+        if (line == null || line.trim().isEmpty()) {
+            return null;
+        }
         String[] fields = line.split("\\s*\\|\\s*", -1);
         try {
-            if (fields.length < 3 || fields[2].trim().isEmpty()) {
+            if (fields.length < 3 || fields[2].trim().isEmpty()
+                    || !("0".equals(fields[1].trim()) || "1".equals(fields[1].trim()))) {
                 return null;
             }
             Task task;
             switch (fields[0].trim()) {
             case "T":
+                if (fields.length != 3) {
+                    return null;
+                }
                 task = new ToDos(fields[2].trim());
                 break;
             case "D":
-                if (fields.length < 4 || fields[3].trim().isEmpty()) {
+                if (fields.length != 4 || fields[3].trim().isEmpty()) {
                     return null;
                 }
                 task = new Deadline(fields[2].trim(), fields[3].trim());
                 break;
             case "E":
-                if (fields.length < 5 || fields[3].trim().isEmpty() || fields[4].trim().isEmpty()) {
+                if (fields.length != 5 || fields[3].trim().isEmpty() || fields[4].trim().isEmpty()) {
                     return null;
                 }
                 task = new Event(fields[2].trim(), fields[3].trim(), fields[4].trim());
