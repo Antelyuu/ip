@@ -1,68 +1,86 @@
 package monkey;
 
-import monkey.command.Command;
 import monkey.command.CommandAction;
 import monkey.exception.MonkeyException;
 import monkey.model.TaskList;
-import monkey.parser.ParsedCommand;
 import monkey.parser.Parser;
 import monkey.storage.Storage;
 import monkey.ui.Ui;
 
 /** A simple command-line task manager. */
 public class Monkey {
+    private static final String DEFAULT_FILE_PATH = "data/duke.txt";
+
+    private final Parser parser;
+    private final Storage storage;
+    private final TaskList tasks;
+
+    /** Creates a Monkey chatbot that stores tasks at the default file path. */
+    public Monkey() {
+        this(DEFAULT_FILE_PATH);
+    }
+
+    /** Creates a Monkey chatbot that stores tasks at the supplied file path. */
+    public Monkey(String filePath) {
+        parser = new Parser();
+        storage = new Storage(filePath);
+        tasks = new TaskList(storage.load());
+    }
+
     /** Runs the task manager and processes commands until the user says bye. */
     public static void main(String[] args) {
-        Ui ui = new Ui();
-        Parser parser = new Parser();
-        Storage storage = new Storage("data/duke.txt");
-        ui.showWelcome();
+        new Monkey().run();
+    }
 
-        TaskList tasks = new TaskList(storage.load());
+    /** Returns Monkey's response to one command for use by graphical clients. */
+    public String getResponse(String input) {
+        StringBuilder response = new StringBuilder();
+        Ui responseUi = new Ui(message -> {
+            if (!response.isEmpty()) {
+                response.append('\n');
+            }
+            response.append(message);
+        });
+
+        try {
+            executeCommand(input, responseUi);
+        } catch (MonkeyException | IllegalArgumentException e) {
+            responseUi.showMessage("OOPS! Monkey says: " + e.getMessage());
+        }
+        return response.toString();
+    }
+
+    /** Runs the command-line interface until the user exits or input ends. */
+    private void run() {
+        Ui ui = new Ui();
+        ui.showWelcome();
 
         String command;
         while ((command = ui.readCommand()) != null) {
             ui.showSeparator();
 
+            boolean shouldExit = false;
             try {
-                if (command.trim().isEmpty()) {
-                    throw new MonkeyException("This monkey heard nothing! Please swing over a command.");
-                }
-
-                ParsedCommand parsedCommand = parser.parse(command);
-                Command commandType = parsedCommand.command();
-                String arguments = parsedCommand.arguments();
-                if (commandType == Command.BYE) {
-                    CommandAction exitCommand = parser.parseAction(command);
-                    exitCommand.execute(tasks, ui, storage);
-                    ui.showSeparator();
-                    break;
-                }
-
-                if (commandType == Command.LIST) {
-                    parser.parseAction(command).execute(tasks, ui, storage);
-                } else if (commandType == Command.MARK) {
-                    parser.parseAction(command).execute(tasks, ui, storage);
-                } else if (commandType == Command.UNMARK) {
-                    parser.parseAction(command).execute(tasks, ui, storage);
-                } else if (commandType == Command.DELETE) {
-                    parser.parseAction(command).execute(tasks, ui, storage);
-                } else if (commandType == Command.EVENT) {
-                    parser.parseAction(command).execute(tasks, ui, storage);
-                } else if (commandType == Command.DEADLINE) {
-                    parser.parseAction(command).execute(tasks, ui, storage);
-                } else if (commandType == Command.TODO) {
-                    parser.parseAction(command).execute(tasks, ui, storage);
-                } else if (commandType == Command.FIND) {
-                    parser.parseAction(command).execute(tasks, ui, storage);
-                } else {
-                    parser.parseAction(command).execute(tasks, ui, storage);
-                }
+                shouldExit = executeCommand(command, ui).isExit();
             } catch (MonkeyException | IllegalArgumentException e) {
-                System.out.println("OOPS! Monkey says: " + e.getMessage());
+                ui.showMessage("OOPS! Monkey says: " + e.getMessage());
             }
 
             ui.showSeparator();
+            if (shouldExit) {
+                break;
+            }
         }
+    }
+
+    /** Executes one command and returns the action that was performed. */
+    private CommandAction executeCommand(String input, Ui targetUi) throws MonkeyException {
+        if (input == null || input.trim().isEmpty()) {
+            throw new MonkeyException("This monkey heard nothing! Please swing over a command.");
+        }
+
+        CommandAction command = parser.parseAction(input);
+        command.execute(tasks, targetUi, storage);
+        return command;
     }
 }
