@@ -1,9 +1,14 @@
 .root {
     -fx-background-color: #f5f2ea;
+    -fx-background-image: url("../images/jungle-background.png");
+    -fx-background-size: cover;
     -fx-font-family: "System";
 }
 
-.scroll-pane,
+.scroll-pane {
+    -fx-background-color: rgba(15, 35, 10, 0.28);
+}
+
 .scroll-pane > .viewport,
 .dialog-container {
     -fx-background-color: transparent;

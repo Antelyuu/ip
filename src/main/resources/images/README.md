@@ -1,8 +1,13 @@
 # Avatar image placeholders
 
-Add square PNG images using these exact names to replace the text placeholders:
+The current preview uses these PNGs:
 
-- `user.png` for the user's avatar
-- `monkey.png` for Monkey's avatar
+- `curious-george.png` for Monkey's avatar
+- `yellow-man.png` for the user's avatar
 
-The application loads both files automatically at startup. Images with a transparent background work best.
+To replace them with your own images, keep these exact filenames. The application loads both files automatically at startup. Images with a transparent background work best.
+
+The current profile-picture references came from:
+
+- https://x.com/GoCuriousGeorge
+- https://www.robglo.com/2014/09/21/man-yellow-hat/

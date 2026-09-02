@@ -13,8 +13,8 @@ import monkey.Monkey;
 
 /** Controls the main chat window and connects it to the Monkey chatbot. */
 public class MainWindow extends AnchorPane {
-    private static final String USER_IMAGE_PATH = "/images/user.png";
-    private static final String MONKEY_IMAGE_PATH = "/images/monkey.png";
+    private static final String USER_IMAGE_PATH = "/images/yellow-man.png";
+    private static final String MONKEY_IMAGE_PATH = "/images/curious-george.png";
     private static final String WELCOME_MESSAGE = "Hello! I'm Monkey, your cheeky little assistant.\n"
             + "What can I do for you today?";
 
