@@ -2,6 +2,37 @@
 
 Each command is run in a fresh process. Expected output is compared exactly.
 
+## Test case: list an empty task list
+
+Aim: Verify that `list` gives useful feedback when there are no saved tasks.
+
+### Command
+```text
+list
+bye
+```
+
+### Expected output
+```text
+____________________________________________________________
+ __  __              _
+|  \/  | ___  _ __  | | _____ _   _
+| |\/| |/ _ \| '_ \ | |/ / _ \ | | |
+| |  | | (_) | | | ||   <  __/ |_| |
+|_|  |_|\___/|_| |_||_|\_\___|\__, |
+                              |___/
+
+Hello! I'm Monkey, your cheeky little assistant.
+What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+There are no tasks in your list.
+____________________________________________________________
+____________________________________________________________
+Bye! Keep swinging, and I hope to see you again soon!
+____________________________________________________________
+```
+
 ## Test case: find tasks by keyword
 
 Aim: Verify that `find` displays matching tasks in their original order.
@@ -16,11 +47,41 @@ bye
 ```
 
 ### Expected output
-The `find book` interaction displays:
 ```text
+____________________________________________________________
+ __  __              _
+|  \/  | ___  _ __  | | _____ _   _
+| |\/| |/ _ \| '_ \ | |/ / _ \ | | |
+| |  | | (_) | | | ||   <  __/ |_| |
+|_|  |_|\___/|_| |_||_|\_\___|\__, |
+                              |___/
+
+Hello! I'm Monkey, your cheeky little assistant.
+What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] buy milk
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] return book
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
 Here are the matching tasks in your list:
 1.[T][ ] read book
 2.[T][ ] return book
+____________________________________________________________
+____________________________________________________________
+Bye! Keep swinging, and I hope to see you again soon!
+____________________________________________________________
 ```
 
 ## Test case: exit immediately
@@ -251,7 +312,7 @@ Aim: Verify that a deadline command stores both its description and due date/tim
 
 ### Command
 ```text
-deadline submit report /by 11/10/2019 5pm
+deadline submit report /by 11/10/2019 1700
 list
 bye
 ```
@@ -271,12 +332,12 @@ What can I do for you today?
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] submit report (by: 11/10/2019 5pm)
+  [D][ ] submit report (by: Oct 11 2019, 5:00 PM)
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
-1.[D][ ] submit report (by: 11/10/2019 5pm)
+1.[D][ ] submit report (by: Oct 11 2019, 5:00 PM)
 ____________________________________________________________
 ____________________________________________________________
 Bye! Keep swinging, and I hope to see you again soon!
