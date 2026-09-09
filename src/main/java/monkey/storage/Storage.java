@@ -50,21 +50,8 @@ public class Storage {
         }
         Path temporaryPath = filePath.resolveSibling(filePath.getFileName() + ".tmp");
         try {
-            Files.createDirectories(filePath.getParent());
-            try (BufferedWriter writer = Files.newBufferedWriter(temporaryPath)) {
-                for (Task task : tasks) {
-                    if (task != null) {
-                        writer.write(formatTask(task));
-                        writer.newLine();
-                    }
-                }
-            }
-            try {
-                Files.move(temporaryPath, filePath, StandardCopyOption.ATOMIC_MOVE,
-                        StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                Files.move(temporaryPath, filePath, StandardCopyOption.REPLACE_EXISTING);
-            }
+            writeTasks(temporaryPath, tasks);
+            replaceSaveFile(temporaryPath);
         } catch (IOException e) {
             System.out.println("OOPS! Monkey could not save your tasks: " + e.getMessage());
             try {
@@ -72,6 +59,27 @@ public class Storage {
             } catch (IOException ignored) {
                 // Preserve the original save error.
             }
+        }
+    }
+
+    private void writeTasks(Path temporaryPath, List<Task> tasks) throws IOException {
+        Files.createDirectories(filePath.getParent());
+        try (BufferedWriter writer = Files.newBufferedWriter(temporaryPath)) {
+            for (Task task : tasks) {
+                if (task != null) {
+                    writer.write(formatTask(task));
+                    writer.newLine();
+                }
+            }
+        }
+    }
+
+    private void replaceSaveFile(Path temporaryPath) throws IOException {
+        try {
+            Files.move(temporaryPath, filePath, StandardCopyOption.ATOMIC_MOVE,
+                    StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            Files.move(temporaryPath, filePath, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
