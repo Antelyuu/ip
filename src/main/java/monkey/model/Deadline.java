@@ -34,6 +34,8 @@ public class Deadline extends Task {
         }
         date = parsedDate;
         dateTime = parsedDateTime;
+        // Exactly one representation is expected after parsing the supported date formats.
+        assert (date != null) ^ (dateTime != null) : "Deadline must contain one date representation";
     }
 
     /** Parses the supported date/time formats used by deadline input. */

@@ -14,6 +14,8 @@ public class TaskList {
 
     /** Creates a task list containing the supplied tasks. */
     public TaskList(List<Task> tasks) {
+        // The storage layer returns a list, so a null list indicates a broken caller contract.
+        assert tasks != null : "Task list source must not be null";
         this.tasks = new ArrayList<>(tasks);
     }
 
@@ -29,36 +31,49 @@ public class TaskList {
 
     /** Returns the task at the given zero-based index. */
     public Task get(int index) {
+        assertValidIndex(index);
         return tasks.get(index);
     }
 
     /** Adds a task to this list. */
     public void add(Task task) {
+        // A null entry cannot be displayed, marked, deleted, or persisted as a task.
+        assert task != null : "Task list must not contain null tasks";
         tasks.add(task);
     }
 
     /** Removes and returns the task at the given zero-based index. */
     public Task remove(int index) {
+        assertValidIndex(index);
         return tasks.remove(index);
     }
 
     /** Marks the task at the given zero-based index as done. */
     public void mark(int index) {
+        assertValidIndex(index);
         tasks.get(index).markAsDone();
     }
 
     /** Marks the task at the given zero-based index as not done. */
     public void unmark(int index) {
+        assertValidIndex(index);
         tasks.get(index).markAsNotDone();
     }
 
     /** Removes and returns the task at the given zero-based index. */
     public Task delete(int index) {
+        assertValidIndex(index);
         return tasks.remove(index);
     }
 
     /** Returns a snapshot suitable for persistence. */
     public List<Task> asList() {
         return new ArrayList<>(tasks);
+    }
+
+    /** Verifies the index precondition shared by task-list operations. */
+    private void assertValidIndex(int index) {
+        // Command classes validate user input before calling these zero-based operations.
+        assert index >= 0 && index < tasks.size() : "Task index must refer to an existing task";
     }
 }
