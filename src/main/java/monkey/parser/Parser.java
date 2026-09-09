@@ -27,28 +27,16 @@ public class Parser {
     /** Creates an executable command object for commands already supported by the stretch design. */
     public CommandAction parseAction(String input) {
         Command command = parseCommand(input);
-        if (command == Command.BYE) {
-            return new ExitCommand();
-        }
-        if (command == Command.DELETE) {
-            return new DeleteCommand(parseArguments(input, command));
-        }
-        if (command == Command.TODO) {
-            return new TodoCommand(parseArguments(input, command));
-        }
-        if (command == Command.LIST) {
-            return new ListCommand();
-        }
-        if (command == Command.FIND) {
-            return new FindCommand(parseArguments(input, command));
-        }
-        if (command == Command.MARK || command == Command.UNMARK) {
-            return new MarkCommand(parseArguments(input, command), command == Command.MARK);
-        }
-        if (command == Command.EVENT || command == Command.DEADLINE) {
-            return new AddCommand(command, parseArguments(input, command));
-        }
-        return new UnknownCommand();
+        return switch (command) {
+        case BYE -> new ExitCommand();
+        case DELETE -> new DeleteCommand(parseArguments(input, command));
+        case TODO -> new TodoCommand(parseArguments(input, command));
+        case LIST -> new ListCommand();
+        case FIND -> new FindCommand(parseArguments(input, command));
+        case MARK, UNMARK -> new MarkCommand(parseArguments(input, command), command == Command.MARK);
+        case EVENT, DEADLINE -> new AddCommand(command, parseArguments(input, command));
+        default -> new UnknownCommand();
+        };
     }
 
     /** Returns the text following the command keyword, trimmed. */
