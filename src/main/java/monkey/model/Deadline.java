@@ -11,12 +11,28 @@ public class Deadline extends Task {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
     private static final DateTimeFormatter DATE_TIME_FORMAT =
             DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a", Locale.ENGLISH);
-    private final LocalDate date;
-    private final LocalDateTime dateTime;
+    private LocalDate date;
+    private LocalDateTime dateTime;
 
     /** Creates an incomplete deadline with its description and due date/time. */
     public Deadline(String description, String by) {
         super(description);
+        setDeadline(by);
+    }
+
+    /** Reschedules this deadline to the supplied date or date-time. */
+    public void reschedule(String by) {
+        setDeadline(by);
+    }
+
+    /** Returns whether this deadline is later than the current date and time. */
+    public boolean isInFuture() {
+        return date != null
+                ? date.isAfter(LocalDate.now())
+                : dateTime.isAfter(LocalDateTime.now());
+    }
+
+    private void setDeadline(String by) {
         String value = by == null ? "" : by.trim();
         if (value.isEmpty()) {
             throw new IllegalArgumentException("A deadline needs a valid date or time.");
@@ -51,7 +67,8 @@ public class Deadline extends Task {
                 // Try the next supported input format.
             }
         }
-        throw new IllegalArgumentException("Use a date like yyyy-mm-dd or d/M/yyyy, or a date/time like d/M/yyyy HHmm.");
+        throw new IllegalArgumentException("Use a date like yyyy-mm-dd or d/M/yyyy, or a date/time like "
+                + "d/M/yyyy HHmm.");
     }
 
     /** Returns the human-readable deadline value for display. */

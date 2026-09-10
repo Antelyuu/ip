@@ -8,6 +8,7 @@ import monkey.command.ExitCommand;
 import monkey.command.FindCommand;
 import monkey.command.ListCommand;
 import monkey.command.MarkCommand;
+import monkey.command.SnoozeCommand;
 import monkey.command.TodoCommand;
 import monkey.command.UnknownCommand;
 
@@ -35,6 +36,7 @@ public class Parser {
         case FIND -> new FindCommand(parseArguments(input, command));
         case MARK, UNMARK -> new MarkCommand(parseArguments(input, command), command == Command.MARK);
         case EVENT, DEADLINE -> new AddCommand(command, parseArguments(input, command));
+        case SNOOZE -> new SnoozeCommand(parseArguments(input, command));
         default -> new UnknownCommand();
         };
     }

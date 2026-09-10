@@ -419,3 +419,99 @@ ____________________________________________________________
 Bye! Keep swinging, and I hope to see you again soon!
 ____________________________________________________________
 ```
+
+## Test case: snooze an incomplete deadline
+
+Aim: Verify that `snooze` updates a deadline and keeps the task in its
+original position.
+
+### Command
+```text
+deadline submit report /by 2099-01-01
+todo buy milk
+snooze 1 2099-02-01
+list
+bye
+```
+
+### Expected output
+```text
+____________________________________________________________
+ __  __              _
+|  \/  | ___  _ __  | | _____ _   _
+| |\/| |/ _ \| '_ \ | |/ / _ \ | | |
+| |  | | (_) | | | ||   <  __/ |_| |
+|_|  |_|\___/|_| |_||_|\_\___|\__, |
+                              |___/
+
+Hello! I'm Monkey, your cheeky little assistant.
+What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] submit report (by: Jan 01 2099)
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] buy milk
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Snoozed this task to Feb 01 2099:
+  [D][ ] submit report (by: Feb 01 2099)
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][ ] submit report (by: Feb 01 2099)
+2.[T][ ] buy milk
+____________________________________________________________
+____________________________________________________________
+Bye! Keep swinging, and I hope to see you again soon!
+____________________________________________________________
+```
+
+The subsequent list must show the snoozed deadline as task 1 and the todo as
+task 2.
+
+## Test case: reject invalid snooze requests
+
+Aim: Verify that snoozing todos and invalid task numbers does not change task
+state.
+
+### Command
+```text
+todo buy milk
+snooze 1 2099-02-01
+snooze abc 2099-02-01
+bye
+```
+
+### Expected output
+```text
+____________________________________________________________
+ __  __              _
+|  \/  | ___  _ __  | | _____ _   _
+| |\/| |/ _ \| '_ \ | |/ / _ \ | | |
+| |  | | (_) | | | ||   <  __/ |_| |
+|_|  |_|\___/|_| |_||_|\_\___|\__, |
+                              |___/
+
+Hello! I'm Monkey, your cheeky little assistant.
+What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] buy milk
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Only deadline tasks can be snoozed.
+____________________________________________________________
+____________________________________________________________
+OOPS! Monkey says: Please provide a valid task number after 'snooze'.
+____________________________________________________________
+____________________________________________________________
+Bye! Keep swinging, and I hope to see you again soon!
+____________________________________________________________
+```

@@ -25,6 +25,11 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
 
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
 
+## Snoozing deadlines
+
+Use `snooze <task number> <date or date-time>` to reschedule an incomplete
+deadline to a future date. For example: `snooze 1 2026-09-20`.
+
 ## Command-line UI tests
 
 The project-specific `test-ui` skill uses the test cases in
