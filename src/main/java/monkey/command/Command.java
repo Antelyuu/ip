@@ -12,6 +12,7 @@ public enum Command {
     DEADLINE("deadline"),
     TODO("todo"),
     FIND("find"),
+    SNOOZE("snooze"),
     UNKNOWN("");
 
     private final String keyword;
