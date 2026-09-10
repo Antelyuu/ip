@@ -20,5 +20,8 @@ _temp/
 # Local chatbot data
 /data/
 
+# Codex local skills and configuration
+/.codex/
+
 /text-ui-test/ACTUAL.TXT
 text-ui-test/EXPECTED-UNIX.TXT

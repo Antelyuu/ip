@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TaskListTest {
     @Test
@@ -45,5 +46,12 @@ class TaskListTest {
 
         assertEquals(1, tasks.size());
         assertEquals("original task", tasks.get(0).getDescription());
+    }
+
+    @Test
+    void get_invalidIndex_reportsBrokenIndexAssumption() {
+        TaskList tasks = new TaskList(List.of(new ToDos("task")));
+
+        assertThrows(AssertionError.class, () -> tasks.get(1));
     }
 }
