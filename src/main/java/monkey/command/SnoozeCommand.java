@@ -64,8 +64,12 @@ public class SnoozeCommand extends CommandAction {
             return;
         }
 
+        String previousDeadline = deadline.getStorageValue();
         deadline.reschedule(parts[1]);
-        storage.save(tasks.asList());
+        if (!saveTasks(tasks.asList(), ui, storage)) {
+            deadline.reschedule(previousDeadline);
+            return;
+        }
         ui.showMessage("Snoozed this task to " + deadline.getBy() + ":");
         ui.showMessage("  " + deadline);
     }

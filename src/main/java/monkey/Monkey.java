@@ -14,6 +14,7 @@ public class Monkey {
     private final Parser parser;
     private final Storage storage;
     private final TaskList tasks;
+    private String startupWarning;
 
     /** Creates a Monkey chatbot that stores tasks at the default file path. */
     public Monkey() {
@@ -25,6 +26,7 @@ public class Monkey {
         parser = new Parser();
         storage = new Storage(filePath);
         tasks = new TaskList(storage.load());
+        startupWarning = storage.getLastError();
     }
 
     /** Runs the task manager and processes commands until the user says bye. */
@@ -41,6 +43,7 @@ public class Monkey {
             }
             response.append(message);
         });
+        showStartupWarning(responseUi);
 
         try {
             executeCommand(input, responseUi);
@@ -54,6 +57,7 @@ public class Monkey {
     private void run() {
         Ui ui = new Ui();
         ui.showWelcome();
+        showStartupWarning(ui);
 
         String command;
         while ((command = ui.readCommand()) != null) {
@@ -82,5 +86,13 @@ public class Monkey {
         CommandAction command = parser.parseAction(input);
         command.execute(tasks, targetUi, storage);
         return command;
+    }
+
+    private void showStartupWarning(Ui ui) {
+        if (startupWarning == null) {
+            return;
+        }
+        ui.showMessage("OOPS! Monkey says: " + startupWarning);
+        startupWarning = null;
     }
 }

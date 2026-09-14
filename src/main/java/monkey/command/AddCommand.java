@@ -1,5 +1,7 @@
 package monkey.command;
 
+import java.util.List;
+
 import monkey.model.Deadline;
 import monkey.model.Event;
 import monkey.model.Task;
@@ -24,13 +26,28 @@ public class AddCommand extends CommandAction {
 
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
-        Task task = type == Command.EVENT ? createEvent(ui) : createDeadline(ui);
+        Task task;
+        try {
+            task = type == Command.EVENT ? createEvent(ui) : createDeadline(ui);
+        } catch (IllegalArgumentException e) {
+            ui.showMessage(e.getMessage());
+            return;
+        }
         if (task == null) {
             return;
         }
 
+        if (tasks.containsEquivalent(task)) {
+            ui.showMessage("OOPS! Monkey says: That task is already in your list.");
+            return;
+        }
+
+        List<Task> proposedTasks = tasks.asList();
+        proposedTasks.add(task);
+        if (!saveTasks(proposedTasks, ui, storage)) {
+            return;
+        }
         tasks.add(task);
-        storage.save(tasks.asList());
         ui.showMessage("Got it. I've added this task:");
         ui.showMessage("  " + task);
         ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
@@ -39,6 +56,12 @@ public class AddCommand extends CommandAction {
     private Task createEvent(Ui ui) {
         int fromMarker = details.indexOf(FROM_MARKER);
         int toMarker = details.indexOf(TO_MARKER, fromMarker + 1);
+        if (fromMarker < 0 || toMarker < 0 || fromMarker > toMarker
+                || details.indexOf(FROM_MARKER, fromMarker + FROM_MARKER.length()) >= 0
+                || details.indexOf(TO_MARKER, toMarker + TO_MARKER.length()) >= 0) {
+            ui.showMessage("OOPS! Monkey says: Use one /from marker followed by one /to marker for an event.");
+            return null;
+        }
         String description = fromMarker >= 0 ? details.substring(0, fromMarker).trim() : details.trim();
         String from = fromMarker >= 0 && toMarker >= 0
                 ? details.substring(fromMarker + FROM_MARKER.length(), toMarker).trim() : "";
@@ -54,6 +77,10 @@ public class AddCommand extends CommandAction {
 
     private Task createDeadline(Ui ui) {
         int byMarker = details.indexOf(BY_MARKER);
+        if (byMarker < 0 || details.indexOf(BY_MARKER, byMarker + BY_MARKER.length()) >= 0) {
+            ui.showMessage("OOPS! Monkey says: Use exactly one /by marker for a deadline.");
+            return null;
+        }
         String description = byMarker >= 0 ? details.substring(0, byMarker).trim() : details.trim();
         String by = byMarker >= 0 ? details.substring(byMarker + BY_MARKER.length()).trim() : "";
 

@@ -27,23 +27,36 @@ public class Parser {
 
     /** Creates an executable command object for commands already supported by the stretch design. */
     public CommandAction parseAction(String input) {
-        Command command = parseCommand(input);
+        ParsedCommand parsedCommand = parse(input);
+        Command command = parsedCommand.command();
+        String arguments = parsedCommand.arguments();
         return switch (command) {
-        case BYE -> new ExitCommand();
-        case DELETE -> new DeleteCommand(parseArguments(input, command));
-        case TODO -> new TodoCommand(parseArguments(input, command));
-        case LIST -> new ListCommand();
-        case FIND -> new FindCommand(parseArguments(input, command));
-        case MARK, UNMARK -> new MarkCommand(parseArguments(input, command), command == Command.MARK);
-        case EVENT, DEADLINE -> new AddCommand(command, parseArguments(input, command));
-        case SNOOZE -> new SnoozeCommand(parseArguments(input, command));
+        case BYE -> arguments.isEmpty() ? new ExitCommand() : unexpectedArguments(command);
+        case DELETE -> new DeleteCommand(arguments);
+        case TODO -> new TodoCommand(arguments);
+        case LIST -> arguments.isEmpty() ? new ListCommand() : unexpectedArguments(command);
+        case FIND -> new FindCommand(arguments);
+        case MARK, UNMARK -> new MarkCommand(arguments, command == Command.MARK);
+        case EVENT, DEADLINE -> new AddCommand(command, arguments);
+        case SNOOZE -> new SnoozeCommand(arguments);
         default -> new UnknownCommand();
         };
     }
 
-    /** Returns the text following the command keyword, trimmed. */
+    /** Returns the normalized text following the command keyword. */
     public String parseArguments(String input, Command command) {
+        if (input == null) {
+            return "";
+        }
+        String trimmedInput = input.trim();
         int keywordLength = command.getKeyword().length();
-        return input.length() > keywordLength ? input.substring(keywordLength).trim() : "";
+        String arguments = trimmedInput.length() > keywordLength
+                ? trimmedInput.substring(keywordLength).trim() : "";
+        return arguments.replaceAll("\\s+", " ");
+    }
+
+    private CommandAction unexpectedArguments(Command command) {
+        return new UnknownCommand("OOPS! Monkey says: The '" + command.getKeyword()
+                + "' command does not accept arguments.");
     }
 }

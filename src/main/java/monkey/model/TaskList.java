@@ -42,6 +42,11 @@ public class TaskList {
         tasks.add(task);
     }
 
+    /** Returns whether an equivalent task is already present. */
+    public boolean containsEquivalent(Task candidate) {
+        return tasks.stream().anyMatch(task -> task.hasSameDetails(candidate));
+    }
+
     /** Removes and returns the task at the given zero-based index. */
     public Task remove(int index) {
         assertValidIndex(index);
