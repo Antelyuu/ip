@@ -82,6 +82,12 @@ public class Deadline extends Task {
     }
 
     @Override
+    public boolean hasSameDetails(Task other) {
+        return super.hasSameDetails(other)
+                && getStorageValue().equals(((Deadline) other).getStorageValue());
+    }
+
+    @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + getBy() + ")";
     }

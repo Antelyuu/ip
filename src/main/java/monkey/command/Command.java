@@ -28,10 +28,10 @@ public enum Command {
 
     /** Converts the first word of user input into a known command. */
     public static Command fromInput(String input) {
-        String trimmedInput = input.trim();
+        String trimmedInput = input == null ? "" : input.trim();
+        String keyword = trimmedInput.split("\\s+", 2)[0];
         for (Command command : values()) {
-            if (command != UNKNOWN && (trimmedInput.equals(command.keyword)
-                    || trimmedInput.startsWith(command.keyword + " "))) {
+            if (command != UNKNOWN && keyword.equals(command.keyword)) {
                 return command;
             }
         }

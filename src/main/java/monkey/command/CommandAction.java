@@ -1,5 +1,8 @@
 package monkey.command;
 
+import java.util.List;
+
+import monkey.model.Task;
 import monkey.model.TaskList;
 import monkey.storage.Storage;
 import monkey.ui.Ui;
@@ -11,6 +14,15 @@ public abstract class CommandAction {
 
     /** Returns whether running this command should end the application. */
     public boolean isExit() {
+        return false;
+    }
+
+    /** Saves a proposed task state and reports any persistence failure. */
+    protected boolean saveTasks(List<Task> proposedTasks, Ui ui, Storage storage) {
+        if (storage.save(proposedTasks)) {
+            return true;
+        }
+        ui.showMessage("OOPS! Monkey says: " + storage.getLastError());
         return false;
     }
 }

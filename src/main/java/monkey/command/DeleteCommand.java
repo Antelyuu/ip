@@ -1,5 +1,7 @@
 package monkey.command;
 
+import java.util.List;
+
 import monkey.model.Task;
 import monkey.model.TaskList;
 import monkey.storage.Storage;
@@ -21,8 +23,12 @@ public class DeleteCommand extends CommandAction {
                 ui.showMessage("That task number does not exist.");
                 return;
             }
-            Task removedTask = tasks.delete(index);
-            storage.save(tasks.asList());
+            List<Task> proposedTasks = tasks.asList();
+            Task removedTask = proposedTasks.remove(index);
+            if (!saveTasks(proposedTasks, ui, storage)) {
+                return;
+            }
+            tasks.delete(index);
             ui.showMessage("Noted. I've removed this task:");
             ui.showMessage("  " + removedTask);
             ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");

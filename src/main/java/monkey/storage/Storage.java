@@ -17,6 +17,7 @@ import monkey.model.ToDos;
 /** Saves Monkey's task list in a simple, human-readable text format. */
 public class Storage {
     private final Path filePath;
+    private String lastError;
 
     /** Creates storage backed by the given file path. */
     public Storage(String filePath) {
@@ -25,45 +26,67 @@ public class Storage {
 
     /** Reads the saved task list, returning an empty list when no save exists yet. */
     public ArrayList<Task> load() {
+        lastError = null;
         ArrayList<Task> tasks = new ArrayList<>();
         if (!Files.exists(filePath)) {
             return tasks;
         }
 
         try {
-            for (String line : Files.readAllLines(filePath)) {
+            List<String> lines = Files.readAllLines(filePath);
+            ArrayList<Integer> malformedLineNumbers = new ArrayList<>();
+            ArrayList<Integer> duplicateLineNumbers = new ArrayList<>();
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i);
                 Task task = parseTask(line);
-                if (task != null) {
+                if (task != null && containsEquivalent(tasks, task)) {
+                    duplicateLineNumbers.add(i + 1);
+                } else if (task != null) {
                     tasks.add(task);
+                } else if (!line.trim().isEmpty()) {
+                    malformedLineNumbers.add(i + 1);
                 }
             }
-        } catch (IOException e) {
-            // A missing or unreadable save should not prevent Monkey from starting.
+            lastError = formatLoadWarnings(malformedLineNumbers, duplicateLineNumbers);
+        } catch (IOException | SecurityException e) {
+            lastError = "Could not read saved tasks from disk.";
         }
         return tasks;
     }
 
-    /** Writes the current task list to disk, replacing the previous snapshot. */
-    public void save(List<Task> tasks) {
+    /** Writes the current task list to disk and returns whether the save succeeded. */
+    public boolean save(List<Task> tasks) {
+        lastError = null;
         if (tasks == null) {
-            return;
+            lastError = "Could not save tasks to disk.";
+            return false;
         }
         Path temporaryPath = filePath.resolveSibling(filePath.getFileName() + ".tmp");
         try {
             writeTasks(temporaryPath, tasks);
             replaceSaveFile(temporaryPath);
-        } catch (IOException e) {
-            System.out.println("OOPS! Monkey could not save your tasks: " + e.getMessage());
+            return true;
+        } catch (IOException | SecurityException e) {
+            lastError = "Could not save tasks to disk.";
             try {
                 Files.deleteIfExists(temporaryPath);
-            } catch (IOException ignored) {
+            } catch (IOException | SecurityException ignored) {
                 // Preserve the original save error.
             }
+            return false;
         }
     }
 
+    /** Returns the most recent loading or saving error, or null when none occurred. */
+    public String getLastError() {
+        return lastError;
+    }
+
     private void writeTasks(Path temporaryPath, List<Task> tasks) throws IOException {
-        Files.createDirectories(filePath.getParent());
+        Path parent = filePath.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
         try (BufferedWriter writer = Files.newBufferedWriter(temporaryPath)) {
             for (Task task : tasks) {
                 if (task != null) {
@@ -72,6 +95,33 @@ public class Storage {
                 }
             }
         }
+    }
+
+    private static String formatMalformedDataError(List<Integer> lineNumbers) {
+        if (lineNumbers.size() == 1) {
+            return "Ignored malformed saved task data on line " + lineNumbers.get(0) + ".";
+        }
+        return "Ignored malformed saved task data on " + lineNumbers.size() + " lines.";
+    }
+
+    private static String formatDuplicateDataError(List<Integer> lineNumbers) {
+        if (lineNumbers.size() == 1) {
+            return "Ignored duplicate saved task data on line " + lineNumbers.get(0) + ".";
+        }
+        return "Ignored duplicate saved task data on " + lineNumbers.size() + " lines.";
+    }
+
+    private static String formatLoadWarnings(List<Integer> malformedLines, List<Integer> duplicateLines) {
+        String malformedWarning = malformedLines.isEmpty() ? null : formatMalformedDataError(malformedLines);
+        String duplicateWarning = duplicateLines.isEmpty() ? null : formatDuplicateDataError(duplicateLines);
+        if (malformedWarning == null) {
+            return duplicateWarning;
+        }
+        return duplicateWarning == null ? malformedWarning : malformedWarning + " " + duplicateWarning;
+    }
+
+    private static boolean containsEquivalent(List<Task> tasks, Task candidate) {
+        return tasks.stream().anyMatch(task -> task.hasSameDetails(candidate));
     }
 
     private void replaceSaveFile(Path temporaryPath) throws IOException {

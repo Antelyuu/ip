@@ -31,6 +31,21 @@ Example: `snooze 1 2026-09-20`
 Only deadline tasks can be snoozed. Todos, events, completed deadlines, and
 dates that are not in the future are rejected.
 
+## Input validation and recovery
+
+Monkey ignores leading and trailing whitespace and treats repeated whitespace
+inside task descriptions as a single space. Commands such as `list` and `bye`
+do not accept arguments, while `find` requires a keyword.
+
+Use exactly one `/by` marker for a deadline. Events require one `/from` marker
+followed by one `/to` marker. Date-based events must use a real date, and their
+end must be later than their start. Identical tasks and descriptions containing
+the storage delimiter (`|`) are rejected.
+
+If saved data contains a malformed or duplicate line, Monkey keeps the valid
+tasks and reports which data it ignored. If saving fails, the requested change
+is not applied to the in-memory task list.
+
 ## Feature ABC
 
 // Feature details

@@ -1,11 +1,13 @@
 package monkey;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class MonkeyTest {
     @TempDir
     Path temporaryDirectory;
@@ -19,5 +21,68 @@ class MonkeyTest {
         assertEquals("Got it. I've added this task:\n"
                 + "  [T][ ] learn JavaFX\n"
                 + "Now you have 1 tasks in the list.", response);
+    }
+
+    @Test
+    void getResponse_leadingAndRepeatedWhitespace_parsesCommandAndArguments() {
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+
+        String response = monkey.getResponse("   todo    learn   Java   ");
+
+        assertEquals("Got it. I've added this task:\n"
+                + "  [T][ ] learn Java\n"
+                + "Now you have 1 tasks in the list.", response);
+    }
+
+    @Test
+    void getResponse_listWithArguments_rejectsUnexpectedArguments() {
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+
+        String response = monkey.getResponse("list extra");
+
+        assertEquals("OOPS! Monkey says: The 'list' command does not accept arguments.", response);
+    }
+
+    @Test
+    void getResponse_byeWithArguments_rejectsUnexpectedArguments() {
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+
+        String response = monkey.getResponse("bye now");
+
+        assertEquals("OOPS! Monkey says: The 'bye' command does not accept arguments.", response);
+    }
+
+    @Test
+    void getResponse_duplicateTodo_rejectsSecondTask() {
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+        monkey.getResponse("todo buy milk");
+
+        String response = monkey.getResponse("todo   buy   milk");
+
+        assertEquals("OOPS! Monkey says: That task is already in your list.", response);
+        assertEquals("Here are the tasks in your list:\n1.[T][ ] buy milk", monkey.getResponse("list"));
+    }
+
+    @Test
+    void getResponse_descriptionWithStorageDelimiter_rejectsTask() {
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+
+        String response = monkey.getResponse("todo buy | milk");
+
+        assertEquals("OOPS! Monkey says: Task descriptions cannot contain '|'.", response);
+    }
+
+    @Test
+    void getResponse_malformedStoredTask_reportsWarningBeforeCommandOutput() throws Exception {
+        Path saveFile = temporaryDirectory.resolve("duke.txt");
+        Files.writeString(saveFile, "T | 0 | buy milk\nmalformed data\n");
+        Monkey monkey = new Monkey(saveFile.toString());
+
+        String response = monkey.getResponse("list");
+
+        assertEquals("OOPS! Monkey says: Ignored malformed saved task data on line 2.\n"
+                + "Here are the tasks in your list:\n"
+                + "1.[T][ ] buy milk", response);
+        assertEquals("Here are the tasks in your list:\n1.[T][ ] buy milk", monkey.getResponse("list"));
     }
 }

@@ -10,8 +10,18 @@ public class Task {
         if (description == null || description.trim().isEmpty()) {
             throw new IllegalArgumentException("This monkey needs a task description before it can add one.");
         }
-        this.description = description;
+        if (description.contains("|")) {
+            throw new IllegalArgumentException("Task descriptions cannot contain '|'.");
+        }
+        this.description = description.trim().replaceAll("\\s+", " ");
         this.isDone = false;
+    }
+
+    /** Returns whether another task has the same type and user-provided details. */
+    public boolean hasSameDetails(Task other) {
+        return other != null
+                && getClass().equals(other.getClass())
+                && description.equalsIgnoreCase(other.description);
     }
 
     /** Returns the task's status icon for display. */

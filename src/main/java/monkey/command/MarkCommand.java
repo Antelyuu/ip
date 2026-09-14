@@ -22,7 +22,8 @@ public class MarkCommand extends CommandAction {
             index = Integer.parseInt(taskNumber) - 1;
         } catch (NumberFormatException e) {
             ui.showMessage(markDone
-                    ? "OOPS! Monkey says: That banana-shaped task number does not look right. Use a number after 'mark'."
+                    ? "OOPS! Monkey says: That banana-shaped task number does not look right. "
+                            + "Use a number after 'mark'."
                     : "OOPS! Monkey says: This monkey needs a valid task number after 'unmark'.");
             return;
         }
@@ -30,15 +31,30 @@ public class MarkCommand extends CommandAction {
             ui.showMessage("That task number does not exist.");
             return;
         }
+        boolean wasDone = tasks.get(index).isDone();
         if (markDone) {
             tasks.mark(index);
-            storage.save(tasks.asList());
+            if (!saveTasks(tasks.asList(), ui, storage)) {
+                restoreCompletionState(tasks, index, wasDone);
+                return;
+            }
             ui.showMessage("Nice! I've marked this task as done:");
         } else {
             tasks.unmark(index);
-            storage.save(tasks.asList());
+            if (!saveTasks(tasks.asList(), ui, storage)) {
+                restoreCompletionState(tasks, index, wasDone);
+                return;
+            }
             ui.showMessage("OK, I've marked this task as not done yet:");
         }
         ui.showMessage("  " + tasks.get(index));
+    }
+
+    private static void restoreCompletionState(TaskList tasks, int index, boolean wasDone) {
+        if (wasDone) {
+            tasks.mark(index);
+        } else {
+            tasks.unmark(index);
+        }
     }
 }

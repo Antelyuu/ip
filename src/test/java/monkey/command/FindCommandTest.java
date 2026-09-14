@@ -16,13 +16,26 @@ class FindCommandTest {
     Path temporaryDirectory;
 
     @Test
+    void execute_emptyKeyword_rejectsInput() {
+        TaskList tasks = new TaskList();
+        tasks.add(new ToDos("buy milk"));
+        StringBuilder output = new StringBuilder();
+
+        new FindCommand("").execute(tasks, new Ui(output::append),
+                new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+
+        assertEquals("OOPS! Monkey says: A find command needs a keyword.", output.toString());
+    }
+
+    @Test
     void execute_matchesKeywordCaseInsensitivelyAndKeepsOriginalOrder() {
         TaskList tasks = new TaskList();
         tasks.add(new ToDos("read book"));
         tasks.add(new ToDos("buy milk"));
         tasks.add(new ToDos("return BOOK"));
 
-        new FindCommand("book").execute(tasks, new Ui(), new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+        new FindCommand("book").execute(tasks, new Ui(),
+                new Storage(temporaryDirectory.resolve("duke.txt").toString()));
 
         assertEquals(3, tasks.size());
         assertEquals("read book", tasks.get(0).getDescription());

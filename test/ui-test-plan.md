@@ -515,3 +515,85 @@ ____________________________________________________________
 Bye! Keep swinging, and I hope to see you again soon!
 ____________________________________________________________
 ```
+
+## Test case: normalize whitespace and reject duplicate tasks
+
+Aim: Verify that extra whitespace is normalized while equivalent tasks and
+unexpected command arguments are rejected.
+
+### Command
+```text
+   todo    buy   milk
+todo buy milk
+list extra
+bye
+```
+
+### Expected output
+```text
+____________________________________________________________
+ __  __              _
+|  \/  | ___  _ __  | | _____ _   _
+| |\/| |/ _ \| '_ \ | |/ / _ \ | | |
+| |  | | (_) | | | ||   <  __/ |_| |
+|_|  |_|\___/|_| |_||_|\_\___|\__, |
+                              |___/
+
+Hello! I'm Monkey, your cheeky little assistant.
+What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] buy milk
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+OOPS! Monkey says: That task is already in your list.
+____________________________________________________________
+____________________________________________________________
+OOPS! Monkey says: The 'list' command does not accept arguments.
+____________________________________________________________
+____________________________________________________________
+Bye! Keep swinging, and I hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: reject invalid temporal data and command markers
+
+Aim: Verify that impossible and non-chronological event dates and repeated
+deadline markers are rejected without adding tasks.
+
+### Command
+```text
+event meeting /from 2026-02-30 1400 /to 2026-03-01 1400
+event meeting /from 2026-09-20 /to 2026-09-20
+deadline submit /by 2026-09-20 /by 2026-09-21
+bye
+```
+
+### Expected output
+```text
+____________________________________________________________
+ __  __              _
+|  \/  | ___  _ __  | | _____ _   _
+| |\/| |/ _ \| '_ \ | |/ / _ \ | | |
+| |  | | (_) | | | ||   <  __/ |_| |
+|_|  |_|\___/|_| |_||_|\_\___|\__, |
+                              |___/
+
+Hello! I'm Monkey, your cheeky little assistant.
+What can I do for you today?
+____________________________________________________________
+____________________________________________________________
+Use event times like yyyy-mm-dd HHmm, d/M/yyyy HHmm, or h:mm am/pm.
+____________________________________________________________
+____________________________________________________________
+An event must end after it starts.
+____________________________________________________________
+____________________________________________________________
+OOPS! Monkey says: Use exactly one /by marker for a deadline.
+____________________________________________________________
+____________________________________________________________
+Bye! Keep swinging, and I hope to see you again soon!
+____________________________________________________________
+```
