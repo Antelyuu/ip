@@ -106,6 +106,26 @@ class SnoozeCommandTest {
     }
 
     @Test
+    void execute_outOfRangeTaskNumber_rejectsInput() {
+        StringBuilder output = new StringBuilder();
+
+        new SnoozeCommand("1 2099-02-01").execute(
+                new TaskList(), createUi(output), new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+
+        assertEquals("That task number does not exist.", output.toString());
+    }
+
+    @Test
+    void constructor_nullArguments_reportsUsage() {
+        StringBuilder output = new StringBuilder();
+
+        new SnoozeCommand(null).execute(
+                new TaskList(), createUi(output), new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+
+        assertEquals("Use: snooze <task number> <date or date-time>.", output.toString());
+    }
+
+    @Test
     void execute_pastDeadline_rejectsInputAndPreservesOriginal() {
         TaskList tasks = new TaskList();
         Deadline deadline = new Deadline("submit report", "2099-01-01");

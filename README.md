@@ -37,12 +37,23 @@ The project-specific `test-ui` skill uses the test cases in
 compile the application and run the plan with:
 
 ```bash
-rm -rf /tmp/monkey-ui-classes
-mkdir -p /tmp/monkey-ui-classes
-javac -d /tmp/monkey-ui-classes $(find src/main/java -name '*.java')
+./gradlew classes
 python3 .codex/skills/test-ui/scripts/run-ui-tests.py \
-  --command 'java -cp /tmp/monkey-ui-classes monkey.Monkey' \
+  --command test/run-monkey-isolated.sh \
   --plan test/ui-test-plan.md
 ```
 
-The runner prints the console session and stops at the first failed test.
+The launcher gives every test case a temporary data directory, so saved tasks
+cannot leak between cases. The runner prints the console session and stops at
+the first failed test.
+
+## Automated test coverage
+
+Run `./gradlew check jacocoTestReport` to execute the JUnit suite, enforce the
+minimum 90% line-coverage gate, and generate the HTML report at
+`build/reports/jacoco/test/html/index.html`.
+
+The coverage gate excludes the JavaFX window/rendering classes and the thin
+application launch wrappers. Those classes depend on a graphical runtime and
+remain manual-test candidates; command parsing, task behavior, persistence,
+console I/O, and non-GUI application behavior remain in the automated metric.

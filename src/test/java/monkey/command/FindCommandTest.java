@@ -1,13 +1,14 @@
 package monkey.command;
 
+import java.nio.file.Path;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
 import monkey.model.TaskList;
 import monkey.model.ToDos;
 import monkey.storage.Storage;
 import monkey.ui.Ui;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
-import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -40,5 +41,17 @@ class FindCommandTest {
         assertEquals(3, tasks.size());
         assertEquals("read book", tasks.get(0).getDescription());
         assertEquals("buy milk", tasks.get(1).getDescription());
+    }
+
+    @Test
+    void execute_noMatchingTasks_displaysHeaderWithoutEntries() {
+        TaskList tasks = new TaskList();
+        tasks.add(new ToDos("buy milk"));
+        StringBuilder output = new StringBuilder();
+
+        new FindCommand("book").execute(tasks, new Ui(message -> output.append(message).append('\n')),
+                new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+
+        assertEquals("Here are the matching tasks in your list:\n", output.toString());
     }
 }

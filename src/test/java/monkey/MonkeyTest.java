@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MonkeyTest {
     @TempDir
@@ -84,5 +85,41 @@ class MonkeyTest {
                 + "Here are the tasks in your list:\n"
                 + "1.[T][ ] buy milk", response);
         assertEquals("Here are the tasks in your list:\n1.[T][ ] buy milk", monkey.getResponse("list"));
+    }
+
+    @Test
+    void getResponse_blankAndNullInput_reportsMissingCommand() {
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+
+        assertEquals("OOPS! Monkey says: This monkey heard nothing! Please swing over a command.",
+                monkey.getResponse("   "));
+        assertEquals("OOPS! Monkey says: This monkey heard nothing! Please swing over a command.",
+                monkey.getResponse(null));
+    }
+
+    @Test
+    void getResponse_unknownCommand_reportsSupportedCommands() {
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+
+        assertTrue(monkey.getResponse("dance").startsWith("OOPS! Monkey says: This monkey does not recognize"));
+    }
+
+    @Test
+    void constructor_existingSave_restoresTasksForNextSession() {
+        Path saveFile = temporaryDirectory.resolve("duke.txt");
+        Monkey firstSession = new Monkey(saveFile.toString());
+        firstSession.getResponse("todo persistent task");
+
+        Monkey secondSession = new Monkey(saveFile.toString());
+
+        assertEquals("Here are the tasks in your list:\n1.[T][ ] persistent task",
+                secondSession.getResponse("list"));
+    }
+
+    @Test
+    void getResponse_invalidDeadlineDate_reportsModelValidationError() {
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+
+        assertTrue(monkey.getResponse("deadline submit /by invalid").startsWith("Use a date like"));
     }
 }
