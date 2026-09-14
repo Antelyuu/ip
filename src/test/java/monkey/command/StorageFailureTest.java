@@ -83,6 +83,20 @@ class StorageFailureTest {
     }
 
     @Test
+    void execute_unmarkCompletedTaskWhenSaveFails_restoresCompletionState() throws Exception {
+        TaskList tasks = new TaskList();
+        ToDos todo = new ToDos("buy milk");
+        todo.markAsDone();
+        tasks.add(todo);
+        StringBuilder output = new StringBuilder();
+
+        new MarkCommand("1", false).execute(tasks, createUi(output), createFailingStorage());
+
+        assertTrue(tasks.get(0).isDone());
+        assertEquals(SAVE_ERROR, output.toString());
+    }
+
+    @Test
     void execute_snoozeWhenSaveFails_restoresDeadline() throws Exception {
         TaskList tasks = new TaskList();
         Deadline deadline = new Deadline("submit", "2099-01-01");

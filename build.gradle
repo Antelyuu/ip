@@ -60,6 +60,39 @@ jacocoTestReport {
     }
 }
 
+def coverageExclusions = [
+    'monkey/Launcher.class',
+    'monkey/Main.class',
+    'monkey/ui/DialogBox.class',
+    'monkey/ui/MainWindow.class'
+]
+
+tasks.withType(JacocoReport).configureEach {
+    classDirectories.setFrom(files(classDirectories.files.collect {
+        fileTree(dir: it, exclude: coverageExclusions)
+    }))
+}
+
+jacocoTestCoverageVerification {
+    dependsOn test
+
+    classDirectories.setFrom(files(classDirectories.files.collect {
+        fileTree(dir: it, exclude: coverageExclusions)
+    }))
+
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.90
+            }
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification
+
 application {
     mainClass = 'monkey.Launcher'
 }
