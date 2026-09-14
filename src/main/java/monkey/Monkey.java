@@ -36,6 +36,11 @@ public class Monkey {
 
     /** Returns Monkey's response to one command for use by graphical clients. */
     public String getResponse(String input) {
+        return processCommand(input).response();
+    }
+
+    /** Processes one command and returns its response and exit state. */
+    public CommandResult processCommand(String input) {
         StringBuilder response = new StringBuilder();
         Ui responseUi = new Ui(message -> {
             if (!response.isEmpty()) {
@@ -45,12 +50,13 @@ public class Monkey {
         });
         showStartupWarning(responseUi);
 
+        boolean shouldExit = false;
         try {
-            executeCommand(input, responseUi);
+            shouldExit = executeCommand(input, responseUi).isExit();
         } catch (MonkeyException | IllegalArgumentException e) {
             responseUi.showMessage("OOPS! Monkey says: " + e.getMessage());
         }
-        return response.toString();
+        return new CommandResult(response.toString(), shouldExit);
     }
 
     /** Runs the command-line interface until the user exits or input ends. */

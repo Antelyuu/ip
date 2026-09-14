@@ -23,6 +23,15 @@ class MonkeyTest {
     }
 
     @Test
+    void processCommand_byeReportsExit() {
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("monkey.txt").toString());
+
+        CommandResult result = monkey.processCommand("bye");
+
+        assertTrue(result.shouldExit());
+    }
+
+    @Test
     void getResponse_todoCommand_returnsCommandOutput() {
         Monkey monkey = new Monkey(temporaryDirectory.resolve("monkey.txt").toString());
 

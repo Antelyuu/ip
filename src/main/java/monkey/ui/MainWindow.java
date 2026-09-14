@@ -2,6 +2,7 @@ package monkey.ui;
 
 import java.net.URL;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -9,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
+import monkey.CommandResult;
 import monkey.Monkey;
 
 /** Controls the main chat window and connects it to the Monkey chatbot. */
@@ -46,7 +48,8 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
-        String response = monkey.getResponse(input);
+        CommandResult result = monkey.processCommand(input);
+        String response = result.response();
 
         if (!input.isBlank()) {
             dialogContainer.getChildren().add(DialogBox.getUserDialog(input, userImage));
@@ -55,6 +58,9 @@ public class MainWindow extends AnchorPane {
             dialogContainer.getChildren().add(DialogBox.getMonkeyDialog(response, monkeyImage));
         }
         userInput.clear();
+        if (result.shouldExit()) {
+            Platform.exit();
+        }
     }
 
     /** Returns an image resource, or null so the FXML placeholder remains visible. */
