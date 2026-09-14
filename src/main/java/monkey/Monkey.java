@@ -9,7 +9,7 @@ import monkey.ui.Ui;
 
 /** A simple command-line task manager. */
 public class Monkey {
-    private static final String DEFAULT_FILE_PATH = "data/duke.txt";
+    private static final String DEFAULT_FILE_PATH = "data/monkey.txt";
 
     private final Parser parser;
     private final Storage storage;

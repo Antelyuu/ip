@@ -20,7 +20,7 @@ class DeleteCommandTest {
     @Test
     void execute_validIndex_removesTaskAndSavesRemainingTasks() throws Exception {
         TaskList tasks = tasksWithTwoTodos();
-        Path saveFile = temporaryDirectory.resolve("duke.txt");
+        Path saveFile = temporaryDirectory.resolve("monkey.txt");
         StringBuilder output = new StringBuilder();
 
         new DeleteCommand("1").execute(tasks, createUi(output), new Storage(saveFile.toString()));
@@ -63,7 +63,7 @@ class DeleteCommandTest {
     }
 
     private Storage createStorage() {
-        return new Storage(temporaryDirectory.resolve("duke.txt").toString());
+        return new Storage(temporaryDirectory.resolve("monkey.txt").toString());
     }
 
     private static Ui createUi(StringBuilder output) {

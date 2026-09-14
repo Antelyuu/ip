@@ -1,5 +1,6 @@
 package monkey;
 
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -14,8 +15,16 @@ class MonkeyTest {
     Path temporaryDirectory;
 
     @Test
+    void defaultFilePath_usesProductName() throws ReflectiveOperationException {
+        Field defaultFilePath = Monkey.class.getDeclaredField("DEFAULT_FILE_PATH");
+        defaultFilePath.setAccessible(true);
+
+        assertEquals("data/monkey.txt", defaultFilePath.get(null));
+    }
+
+    @Test
     void getResponse_todoCommand_returnsCommandOutput() {
-        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("monkey.txt").toString());
 
         String response = monkey.getResponse("todo learn JavaFX");
 
@@ -26,7 +35,7 @@ class MonkeyTest {
 
     @Test
     void getResponse_leadingAndRepeatedWhitespace_parsesCommandAndArguments() {
-        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("monkey.txt").toString());
 
         String response = monkey.getResponse("   todo    learn   Java   ");
 
@@ -37,7 +46,7 @@ class MonkeyTest {
 
     @Test
     void getResponse_listWithArguments_rejectsUnexpectedArguments() {
-        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("monkey.txt").toString());
 
         String response = monkey.getResponse("list extra");
 
@@ -46,7 +55,7 @@ class MonkeyTest {
 
     @Test
     void getResponse_byeWithArguments_rejectsUnexpectedArguments() {
-        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("monkey.txt").toString());
 
         String response = monkey.getResponse("bye now");
 
@@ -55,7 +64,7 @@ class MonkeyTest {
 
     @Test
     void getResponse_duplicateTodo_rejectsSecondTask() {
-        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("monkey.txt").toString());
         monkey.getResponse("todo buy milk");
 
         String response = monkey.getResponse("todo   buy   milk");
@@ -66,7 +75,7 @@ class MonkeyTest {
 
     @Test
     void getResponse_descriptionWithStorageDelimiter_rejectsTask() {
-        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("monkey.txt").toString());
 
         String response = monkey.getResponse("todo buy | milk");
 
@@ -75,7 +84,7 @@ class MonkeyTest {
 
     @Test
     void getResponse_malformedStoredTask_reportsWarningBeforeCommandOutput() throws Exception {
-        Path saveFile = temporaryDirectory.resolve("duke.txt");
+        Path saveFile = temporaryDirectory.resolve("monkey.txt");
         Files.writeString(saveFile, "T | 0 | buy milk\nmalformed data\n");
         Monkey monkey = new Monkey(saveFile.toString());
 
@@ -89,7 +98,7 @@ class MonkeyTest {
 
     @Test
     void getResponse_blankAndNullInput_reportsMissingCommand() {
-        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("monkey.txt").toString());
 
         assertEquals("OOPS! Monkey says: This monkey heard nothing! Please swing over a command.",
                 monkey.getResponse("   "));
@@ -99,14 +108,14 @@ class MonkeyTest {
 
     @Test
     void getResponse_unknownCommand_reportsSupportedCommands() {
-        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("monkey.txt").toString());
 
         assertTrue(monkey.getResponse("dance").startsWith("OOPS! Monkey says: This monkey does not recognize"));
     }
 
     @Test
     void constructor_existingSave_restoresTasksForNextSession() {
-        Path saveFile = temporaryDirectory.resolve("duke.txt");
+        Path saveFile = temporaryDirectory.resolve("monkey.txt");
         Monkey firstSession = new Monkey(saveFile.toString());
         firstSession.getResponse("todo persistent task");
 
@@ -118,7 +127,7 @@ class MonkeyTest {
 
     @Test
     void getResponse_invalidDeadlineDate_reportsModelValidationError() {
-        Monkey monkey = new Monkey(temporaryDirectory.resolve("duke.txt").toString());
+        Monkey monkey = new Monkey(temporaryDirectory.resolve("monkey.txt").toString());
 
         assertTrue(monkey.getResponse("deadline submit /by invalid").startsWith("Use a date like"));
     }

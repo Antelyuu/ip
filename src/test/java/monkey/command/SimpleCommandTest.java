@@ -45,7 +45,7 @@ class SimpleCommandTest {
     }
 
     private Storage createStorage() {
-        return new Storage(temporaryDirectory.resolve("duke.txt").toString());
+        return new Storage(temporaryDirectory.resolve("monkey.txt").toString());
     }
 
     private static Ui createUi(StringBuilder output) {

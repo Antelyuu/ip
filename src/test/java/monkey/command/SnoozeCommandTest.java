@@ -25,7 +25,7 @@ class SnoozeCommandTest {
         TaskList tasks = new TaskList();
         tasks.add(new ToDos("keep position"));
         tasks.add(new Deadline("submit report", "2099-01-01"));
-        Path saveFile = temporaryDirectory.resolve("duke.txt");
+        Path saveFile = temporaryDirectory.resolve("monkey.txt");
         StringBuilder output = new StringBuilder();
 
         new SnoozeCommand("2 2099-02-01").execute(
@@ -46,7 +46,7 @@ class SnoozeCommandTest {
         StringBuilder output = new StringBuilder();
 
         new SnoozeCommand("1 2099-02-01 1730").execute(
-                tasks, createUi(output), new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+                tasks, createUi(output), new Storage(temporaryDirectory.resolve("monkey.txt").toString()));
 
         assertEquals("Snoozed this task to Feb 01 2099, 5:30 PM:\n"
                 + "  [D][ ] submit report (by: Feb 01 2099, 5:30 PM)", output.toString());
@@ -59,10 +59,10 @@ class SnoozeCommandTest {
         StringBuilder output = new StringBuilder();
 
         new SnoozeCommand("1 2099-02-01").execute(
-                tasks, createUi(output), new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+                tasks, createUi(output), new Storage(temporaryDirectory.resolve("monkey.txt").toString()));
 
         assertEquals("Only deadline tasks can be snoozed.", output.toString());
-        assertFalse(Files.exists(temporaryDirectory.resolve("duke.txt")));
+        assertFalse(Files.exists(temporaryDirectory.resolve("monkey.txt")));
     }
 
     @Test
@@ -72,7 +72,7 @@ class SnoozeCommandTest {
         StringBuilder output = new StringBuilder();
 
         new SnoozeCommand("1 2099-02-01").execute(
-                tasks, createUi(output), new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+                tasks, createUi(output), new Storage(temporaryDirectory.resolve("monkey.txt").toString()));
 
         assertEquals("Only deadline tasks can be snoozed.", output.toString());
     }
@@ -86,7 +86,7 @@ class SnoozeCommandTest {
         StringBuilder output = new StringBuilder();
 
         new SnoozeCommand("1 2099-02-01").execute(
-                tasks, createUi(output), new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+                tasks, createUi(output), new Storage(temporaryDirectory.resolve("monkey.txt").toString()));
 
         assertEquals("Completed tasks cannot be snoozed.", output.toString());
         assertEquals("2099-01-01", deadline.getStorageValue());
@@ -99,7 +99,7 @@ class SnoozeCommandTest {
         StringBuilder output = new StringBuilder();
 
         new SnoozeCommand("abc 2099-02-01").execute(
-                tasks, createUi(output), new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+                tasks, createUi(output), new Storage(temporaryDirectory.resolve("monkey.txt").toString()));
 
         assertEquals("OOPS! Monkey says: Please provide a valid task number after 'snooze'.",
                 output.toString());
@@ -110,7 +110,7 @@ class SnoozeCommandTest {
         StringBuilder output = new StringBuilder();
 
         new SnoozeCommand("1 2099-02-01").execute(
-                new TaskList(), createUi(output), new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+                new TaskList(), createUi(output), new Storage(temporaryDirectory.resolve("monkey.txt").toString()));
 
         assertEquals("That task number does not exist.", output.toString());
     }
@@ -120,7 +120,7 @@ class SnoozeCommandTest {
         StringBuilder output = new StringBuilder();
 
         new SnoozeCommand(null).execute(
-                new TaskList(), createUi(output), new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+                new TaskList(), createUi(output), new Storage(temporaryDirectory.resolve("monkey.txt").toString()));
 
         assertEquals("Use: snooze <task number> <date or date-time>.", output.toString());
     }
@@ -133,7 +133,7 @@ class SnoozeCommandTest {
         StringBuilder output = new StringBuilder();
 
         new SnoozeCommand("1 2000-01-01").execute(
-                tasks, createUi(output), new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+                tasks, createUi(output), new Storage(temporaryDirectory.resolve("monkey.txt").toString()));
 
         assertEquals("A snoozed deadline must be in the future.", output.toString());
         assertEquals("2099-01-01", deadline.getStorageValue());
@@ -147,7 +147,7 @@ class SnoozeCommandTest {
         StringBuilder output = new StringBuilder();
 
         new SnoozeCommand("1 next-week").execute(
-                tasks, createUi(output), new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+                tasks, createUi(output), new Storage(temporaryDirectory.resolve("monkey.txt").toString()));
 
         assertEquals("Use a date like yyyy-mm-dd or d/M/yyyy, or a date/time like d/M/yyyy HHmm.",
                 output.toString());
@@ -160,7 +160,7 @@ class SnoozeCommandTest {
         StringBuilder output = new StringBuilder();
 
         new SnoozeCommand("").execute(
-                tasks, createUi(output), new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+                tasks, createUi(output), new Storage(temporaryDirectory.resolve("monkey.txt").toString()));
 
         assertEquals("Use: snooze <task number> <date or date-time>.", output.toString());
     }

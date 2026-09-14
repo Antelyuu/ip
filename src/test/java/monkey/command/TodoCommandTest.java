@@ -21,7 +21,7 @@ class TodoCommandTest {
     @Test
     void execute_validDescription_addsTodoAndSavesIt() throws Exception {
         TaskList tasks = new TaskList();
-        Path saveFile = temporaryDirectory.resolve("duke.txt");
+        Path saveFile = temporaryDirectory.resolve("monkey.txt");
 
         new TodoCommand("buy milk").execute(tasks, new Ui(), new Storage(saveFile.toString()));
 
@@ -35,7 +35,7 @@ class TodoCommandTest {
     @Test
     void execute_emptyDescription_doesNotChangeTasksOrSaveFile() throws Exception {
         TaskList tasks = new TaskList();
-        Path saveFile = temporaryDirectory.resolve("duke.txt");
+        Path saveFile = temporaryDirectory.resolve("monkey.txt");
 
         new TodoCommand("").execute(tasks, new Ui(), new Storage(saveFile.toString()));
 
@@ -47,7 +47,7 @@ class TodoCommandTest {
     void execute_existingTasks_appendsTodoAndPreservesExistingTasks() throws Exception {
         TaskList tasks = new TaskList();
         tasks.add(new ToDos("existing task"));
-        Path saveFile = temporaryDirectory.resolve("duke.txt");
+        Path saveFile = temporaryDirectory.resolve("monkey.txt");
 
         new TodoCommand("new task").execute(tasks, new Ui(), new Storage(saveFile.toString()));
 

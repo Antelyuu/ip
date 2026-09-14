@@ -112,7 +112,7 @@ class StorageFailureTest {
     private Storage createFailingStorage() throws Exception {
         Path blockingFile = temporaryDirectory.resolve("not-a-directory");
         Files.writeString(blockingFile, "block child creation");
-        return new Storage(blockingFile.resolve("duke.txt").toString());
+        return new Storage(blockingFile.resolve("monkey.txt").toString());
     }
 
     private static Ui createUi(StringBuilder output) {

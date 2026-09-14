@@ -33,7 +33,7 @@ class StorageTest {
 
     @Test
     void load_fileContainingMalformedLine_keepsValidTasksAndReportsLine() throws Exception {
-        Path saveFile = temporaryDirectory.resolve("duke.txt");
+        Path saveFile = temporaryDirectory.resolve("monkey.txt");
         Files.writeString(saveFile, "T | 0 | buy milk\nD | nope | broken | 2026-09-20\n");
         Storage storage = new Storage(saveFile.toString());
 
@@ -46,7 +46,7 @@ class StorageTest {
 
     @Test
     void load_fileContainingDuplicateTask_keepsFirstTaskAndReportsLine() throws Exception {
-        Path saveFile = temporaryDirectory.resolve("duke.txt");
+        Path saveFile = temporaryDirectory.resolve("monkey.txt");
         Files.writeString(saveFile, "T | 0 | buy milk\nT | 1 | BUY   MILK\n");
         Storage storage = new Storage(saveFile.toString());
 
@@ -61,7 +61,7 @@ class StorageTest {
     void save_parentPathIsFile_returnsFalseAndReportsError() throws Exception {
         Path blockingFile = temporaryDirectory.resolve("not-a-directory");
         Files.writeString(blockingFile, "block child creation");
-        Storage storage = new Storage(blockingFile.resolve("duke.txt").toString());
+        Storage storage = new Storage(blockingFile.resolve("monkey.txt").toString());
 
         boolean isSaved = storage.save(List.of(new ToDos("buy milk")));
 
@@ -71,7 +71,7 @@ class StorageTest {
 
     @Test
     void saveAndLoad_allTaskTypesAndStatuses_roundTripsData() {
-        Path saveFile = temporaryDirectory.resolve("nested/data/duke.txt");
+        Path saveFile = temporaryDirectory.resolve("nested/data/monkey.txt");
         Storage storage = new Storage(saveFile.toString());
         ToDos todo = new ToDos("buy milk");
         Deadline deadline = new Deadline("submit", "2099-01-01 1730");
@@ -90,7 +90,7 @@ class StorageTest {
 
     @Test
     void save_nullTaskList_returnsFalse() {
-        Storage storage = new Storage(temporaryDirectory.resolve("duke.txt").toString());
+        Storage storage = new Storage(temporaryDirectory.resolve("monkey.txt").toString());
 
         assertFalse(storage.save(null));
         assertEquals("Could not save tasks to disk.", storage.getLastError());
@@ -98,19 +98,19 @@ class StorageTest {
 
     @Test
     void save_listContainingNull_skipsNullEntry() throws Exception {
-        Storage storage = new Storage(temporaryDirectory.resolve("duke.txt").toString());
+        Storage storage = new Storage(temporaryDirectory.resolve("monkey.txt").toString());
         java.util.ArrayList<Task> tasks = new java.util.ArrayList<>();
         tasks.add(null);
         tasks.add(new ToDos("buy milk"));
 
         assertTrue(storage.save(tasks));
 
-        assertEquals("T | 0 | buy milk", Files.readString(temporaryDirectory.resolve("duke.txt")).trim());
+        assertEquals("T | 0 | buy milk", Files.readString(temporaryDirectory.resolve("monkey.txt")).trim());
     }
 
     @Test
     void load_multipleMalformedAndDuplicateLines_reportsCombinedWarnings() throws Exception {
-        Path saveFile = temporaryDirectory.resolve("duke.txt");
+        Path saveFile = temporaryDirectory.resolve("monkey.txt");
         Files.writeString(saveFile, "unknown\nT | 0 | task\nT | 1 | TASK\nbroken\n");
         Storage storage = new Storage(saveFile.toString());
 
@@ -123,7 +123,7 @@ class StorageTest {
 
     @Test
     void load_multipleDuplicateLines_reportsDuplicateCount() throws Exception {
-        Path saveFile = temporaryDirectory.resolve("duke.txt");
+        Path saveFile = temporaryDirectory.resolve("monkey.txt");
         Files.writeString(saveFile, "T | 0 | task\nT | 1 | TASK\nT | 0 | task\n");
         Storage storage = new Storage(saveFile.toString());
 
@@ -135,7 +135,7 @@ class StorageTest {
 
     @Test
     void load_invalidFieldShapes_skipsEveryInvalidRecord() throws Exception {
-        Path saveFile = temporaryDirectory.resolve("duke.txt");
+        Path saveFile = temporaryDirectory.resolve("monkey.txt");
         Files.writeString(saveFile, "T | 2 | task\nT | 0 | \nT | 0 | task | extra\n"
                 + "D | 0 | task\nD | 0 | task | bad-date\n"
                 + "E | 0 | task | 2pm\nE | 0 | task | 3pm | 2pm\nX | 0 | task\n");

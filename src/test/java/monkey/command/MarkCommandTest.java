@@ -23,7 +23,7 @@ class MarkCommandTest {
     void execute_markAndUnmarkValidTask_updatesStateAndStorage() throws Exception {
         TaskList tasks = new TaskList();
         tasks.add(new ToDos("read"));
-        Path saveFile = temporaryDirectory.resolve("duke.txt");
+        Path saveFile = temporaryDirectory.resolve("monkey.txt");
         Storage storage = new Storage(saveFile.toString());
         StringBuilder output = new StringBuilder();
 
@@ -61,7 +61,7 @@ class MarkCommandTest {
     }
 
     private Storage createStorage() {
-        return new Storage(temporaryDirectory.resolve("duke.txt").toString());
+        return new Storage(temporaryDirectory.resolve("monkey.txt").toString());
     }
 
     private static Ui createUi(StringBuilder output) {

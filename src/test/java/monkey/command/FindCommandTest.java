@@ -23,7 +23,7 @@ class FindCommandTest {
         StringBuilder output = new StringBuilder();
 
         new FindCommand("").execute(tasks, new Ui(output::append),
-                new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+                new Storage(temporaryDirectory.resolve("monkey.txt").toString()));
 
         assertEquals("OOPS! Monkey says: A find command needs a keyword.", output.toString());
     }
@@ -36,7 +36,7 @@ class FindCommandTest {
         tasks.add(new ToDos("return BOOK"));
 
         new FindCommand("book").execute(tasks, new Ui(),
-                new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+                new Storage(temporaryDirectory.resolve("monkey.txt").toString()));
 
         assertEquals(3, tasks.size());
         assertEquals("read book", tasks.get(0).getDescription());
@@ -50,7 +50,7 @@ class FindCommandTest {
         StringBuilder output = new StringBuilder();
 
         new FindCommand("book").execute(tasks, new Ui(message -> output.append(message).append('\n')),
-                new Storage(temporaryDirectory.resolve("duke.txt").toString()));
+                new Storage(temporaryDirectory.resolve("monkey.txt").toString()));
 
         assertEquals("Here are the matching tasks in your list:\n", output.toString());
     }
